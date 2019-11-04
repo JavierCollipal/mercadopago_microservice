@@ -1,0 +1,13 @@
+paths:
+  /api/v1/payments/notification/payments:
+    post:
+      tags:
+        - notificaciones ipn
+      summary: When MercadoPago send a ipn notification, this route is going to handle the process of payment status change
+      produces:
+        - application/json
+      responses:
+        201:
+          description: standard post 2xx response
+        400:
+          description: when something is wrong
