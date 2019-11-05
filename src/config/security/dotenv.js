@@ -15,4 +15,6 @@ module.exports = {
   server_port: process.env.SERVER_PORT,
   sequelize_dialect: process.env.SEQUELIZE_DIALECT,
   log_level: process.env.LOG_LEVEL,
+  mercadopago_sandbox_key: process.env.MERCADOPAGO_SANDBOX_KEY,
+  mercadopago_production_key: process.env.MERCADOPAGO_PRODUCTION_KEY,
 };
