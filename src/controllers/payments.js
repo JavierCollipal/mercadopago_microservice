@@ -1,12 +1,10 @@
 const { paymentService } = require('../services/index');
 const { dataResponse } = require('../common/response');
-const { logger } = require('../config/logger/pino');
 const paymentController = {
-
   handleMercadoPagoNotification(req, res) {
-    logger.info(req.body);
+    res.sendStatus(201);
   },
 
 };
 
-module.exports = paymentController;
+module.exports = Object.freeze(paymentController);
