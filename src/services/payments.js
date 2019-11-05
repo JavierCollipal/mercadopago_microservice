@@ -1,12 +1,7 @@
-const payments = [
-  {hola: 'mundo'}
-];
-const getAll = () => {
-};
 
-const create = () => {
+const handleMercadoPagoNotification = () => {
 
 };
 
-module.exports = { getAll, create };
+module.exports = { handleMercadoPagoNotification };
 

@@ -5,8 +5,7 @@ const {
   rabbit_host,
   rabbit_port
 } = require("../security/dotenv");
-//We make the connection only one time
-//Remember to never close the rabbit connection in prod.
+
 const connectionParams = {
     protocol: "amqp",
     hostname: rabbit_host,
@@ -14,8 +13,10 @@ const connectionParams = {
     username: rabbit_username,
     password: rabbit_password
   };
-
+//We make the connection only one time
+//Remember to never close the rabbit connection in prod.
 const open = require("amqplib")
+  .connect(connectionParams)
   .connect(connectionParams)
   .catch(onErr);
 console.log('probando si open es duplicado con dos o mas imports');

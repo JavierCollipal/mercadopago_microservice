@@ -2,7 +2,6 @@ const express = require('express');
 const paymentRouter = express.Router();
 const { paymentController } = require('../controllers/index');
 
-paymentRouter.get('/', paymentController.getAll);
-paymentRouter.post('/', paymentController.create);
+paymentRouter.post('/notifications', paymentController.handleMercadoPagoNotification);
 
 module.exports = paymentRouter;
