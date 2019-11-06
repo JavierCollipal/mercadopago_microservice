@@ -1,5 +1,5 @@
 const MercadoPago = require("mercadopago");
-const {mercadopago_sandbox_key} = require("../security/dotenv");
+const { mercadopago_sandbox_key } = require("../security/dotenv");
 const backUrlMaker = require('../../common/mercadopago/backUrl');
 
 //remember to change this when you get the mercadoPago production key
@@ -8,8 +8,7 @@ MercadoPago.configure({
     access_token: mercadopago_sandbox_key,
 });
 
-//if we want to use this microservice in another project
-//this function is useful to make differents urls
+//if we want to use this microservice in another project, this function is useful to make differents urls
 const back_urls = backUrlMaker(
     "http://35.238.179.150/company/my-job-offer/1",
     "http://35.238.179.150/company/my-job-offer/2",
@@ -27,4 +26,7 @@ const defaultPreferenceMaker = (items) => Object.freeze({
     auto_return: auto_return,
 });
 
-module.exports = {MercadoPago, defaultPreferenceMaker};
+module.exports = {
+    MercadoPago,
+    defaultPreferenceMaker,
+};
