@@ -1,6 +1,7 @@
 const {MercadoPago, defaultPreferenceMaker} = require("../config/mercadoPago/mercadoPago");
 const itemsMaker = require("../common/mercadopago/items");
 const onErr = require('../common/onErr');
+const {createChannel} = require('../config/amqp/amqplib');
 //nest api job is getting all the items data so the microservice is only going to deal
 //with mercadopago Items,Payer and Preferences interface.
 
@@ -10,15 +11,14 @@ const smartCheckoutHandler = (preferences) => {
     }));
 };
 
-const transactionHandler = (items , userId, preferenceId, state) => {
+const transactionHandler = (items, userId, preferenceId, state) => {
     console.log(items);
     console.log(userId);
     console.log(preferenceId);
     console.log(state);
 };
-const initPointHandler  = (initPoint) => initPoint;
 
-const msgHandler = (msg) => {
+const msgHandler = (msg, ch) => {
     const message = JSON.parse(msg);
     const items = itemsMaker(message.products);
     const preferences = defaultPreferenceMaker(items);
@@ -26,10 +26,20 @@ const msgHandler = (msg) => {
     responseFromMercadoPago
         .then(res => {
             transactionHandler(res.body.items, res.body.userId, res.body.id);
-            return initPointHandler(res.body.init_point);
+            ch.sendToQueue(msg.properties.replyTo, Buffer.from(res.body.init_point.toString()), {
+                correlationId: msg.properties.correlationId
+            });
+            ch.ack(msg);
         })
         .catch(onErr)
 };
 
-/*ESTA PARTE HACERLA PROMISE O VER SI EL THENABLE NOS DEVUELVE EL BODY.INIT*/
+const channel = createChannel();
 
+channel
+    .then(ch => {
+        ch.assertQueue("pepito", {durable: false});
+        ch.prefetch(1);
+        console.log("esperando por requests RPC");
+        ch.consume("pepito", msg => msgHandler(msg))
+    });
