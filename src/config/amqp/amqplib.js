@@ -1,4 +1,5 @@
 const onErr = require('../../common/onErr');
+const { logger } = require('../logger/pino');
 const {
   rabbit_username,
   rabbit_password,
@@ -17,7 +18,6 @@ const connectionParams = {
 //Remember to never close the rabbit connection in prod.
 const open = require("amqplib")
   .connect(connectionParams)
-  .connect(connectionParams)
   .catch(onErr);
 console.log('probando si open es duplicado con dos o mas imports');
 
@@ -27,4 +27,5 @@ const createChannel = () => {
     })
 };
 console.log(createChannel);
+logger.info("Ampq connected");
 module.exports = { createChannel };
