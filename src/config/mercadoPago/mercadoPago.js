@@ -21,7 +21,7 @@ const auto_return = "approved";
 
 const defaultPreferenceMaker = (items) => Object.freeze({
     items,
-    back_url: back_urls,
+    back_urls: back_urls,
     notification_url: notification_url,
     auto_return: auto_return,
 });

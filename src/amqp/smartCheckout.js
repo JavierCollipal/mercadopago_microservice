@@ -1,7 +1,6 @@
 const { MercadoPago, defaultPreferenceMaker } = require("../config/mercadoPago/mercadoPago");
-const itemsMaker = require("../common/mercadopago/items");
 const onErr = require("../common/onErr");
-const logger = require("../config/logger/pino");
+const { logger } = require("../config/logger/pino");
 const { createChannel } = require("../config/amqp/amqplib");
 //nest api job is getting all the items data so the microservice is only going to deal
 //with mercadopago Items,Payer and Preferences interface.
@@ -20,13 +19,13 @@ const transactionHandler = (items, userId, preferenceId, state) => {
 };
 
 const msgHandler = (msg, ch) => {
-  const message = JSON.parse(msg);
-  const items = itemsMaker(message.products);
+  const message = JSON.parse(msg.content.toString());
+  const items = message.items;
   const preferences = defaultPreferenceMaker(items);
   const responseFromMercadoPago = smartCheckoutHandler(preferences);
   responseFromMercadoPago
     .then(res => {
-      transactionHandler(res.body.items, res.body.userId, res.body.id);
+      transactionHandler(res.body.items, message.userId, res.body.id,1);
       ch.sendToQueue(msg.properties.replyTo, Buffer.from(res.body.init_point.toString()), {
         correlationId: msg.properties.correlationId,
       });
@@ -37,13 +36,14 @@ const msgHandler = (msg, ch) => {
 
 const rpcChannel = () => {
   const channel = createChannel();
-
   channel
     .then(ch => {
-      ch.assertQueue("pepito", { durable: false });
+      ch.assertQueue("payments_rpc", { durable: false }).then(q => {
       ch.prefetch(1);
       logger.info("waiting for RPC requests");
-      ch.consume("pepito", msg => msgHandler(msg));
+      ch.consume(q.queue, msg => msgHandler(msg, ch));
+      });
+
     });
 };
 
