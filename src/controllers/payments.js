@@ -1,14 +1,10 @@
-const { paymentService } = require('../services/index');
-const { dataResponse } = require('../common/response');
+const {paymentService} = require('../services/index');
+const {dataResponse} = require('../common/response');
+
 const paymentController = {
-  getAll(req, res) {
-
-  },
-
-  create(req, res) {
-
-  },
-
+    handleMercadoPagoNotification(req, res) {
+        res.sendStatus(201);
+    },
 };
 
-module.exports = paymentController;
+module.exports = Object.freeze(paymentController);
