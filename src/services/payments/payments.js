@@ -8,7 +8,7 @@ const handleChargebackNotification = () => logger.info("its time to deal with ch
 const handleMerchantOrderNotification = () => logger.info("its time to deal with Merchant Orders");
 
 const handleMercadoPagoNotification = (notification) => {
-  logger.info(notification.body);
+  logger.info(notification);
   switch (notification.topic) {
     case 1:
       handlePaymentNotification();
