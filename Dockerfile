@@ -3,6 +3,10 @@ from node:10.14-alpine
 RUN mkdir -p /usr/src/mercadopago_microservice
 WORKDIR /usr/src/mercadopago_microservice
 
+ENV RABBIT_HOST=35.238.179.150
+ENV RABBIT_PORT=5672
+ENV RABBITMQ_USERNAME=carlos@woorkit.cl
+ENV RABBITMQ_PASSWORD=LD8K¿w8?1un?
 ENV SERVER_HOST=0.0.0.0
 ENV SERVER_PORT=10000
 ENV SEQUELIZE_DIALECT=postgres
