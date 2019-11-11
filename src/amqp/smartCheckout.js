@@ -12,10 +12,6 @@ const smartCheckoutHandler = (preferences) => {
 };
 
 const transactionHandler = (items, userId, preferenceId, state) => {
-  console.log(items);
-  console.log(userId);
-  console.log(preferenceId);
-  console.log(state);
 };
 
 const msgHandler = (msg, ch) => {
