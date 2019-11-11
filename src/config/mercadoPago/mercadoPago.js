@@ -24,8 +24,9 @@ const notification_url = mercadopago_notification_url;
 //if we wish to auto return after finishing the payment
 const auto_return = "approved";
 
-const defaultPreferenceMaker = (items) => Object.freeze({
+const defaultPreferenceMaker = (items, payer) => Object.freeze({
   items,
+  payer,
   back_urls,
   notification_url,
   auto_return,

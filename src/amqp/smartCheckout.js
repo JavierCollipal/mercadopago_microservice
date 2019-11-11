@@ -2,6 +2,7 @@ const { MercadoPago, defaultPreferenceMaker } = require("../config/mercadoPago/m
 const onErr = require("../common/onErr");
 const { logger } = require("../config/logger/pino");
 const { createChannel } = require("../config/amqp/amqplib");
+
 //nest api job is getting all the items data so the microservice is only going to deal
 //with mercadopago Items,Payer and Preferences interface.
 
@@ -12,8 +13,12 @@ const smartCheckoutHandler = (preferences) => {
 };
 
 const transactionHandler = (items, userId, preferenceId, state) => {
+
 };
 
+const getPayerData = (userId) => {
+
+};
 const msgHandler = (msg, ch) => {
   const message = JSON.parse(msg.content.toString());
   const items = message.items;
