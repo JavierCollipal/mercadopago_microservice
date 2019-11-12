@@ -56,6 +56,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
 
       },
+      created_date: {
+        type: DataTypes.DATE,
+
+      },
     },
     {
       createdAt: false,

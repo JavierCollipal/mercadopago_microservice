@@ -1,5 +1,5 @@
 const sequelizeLibrary = require("sequelize");
-const logger = require("../config/logger/pino");
+const { logger } = require("../config/logger/pino");
 
 const {
   database,

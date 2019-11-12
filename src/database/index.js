@@ -1,12 +1,11 @@
 const { sequelizeInstance, sequelizeLibrary } = require('./sequelize');
-const { payment } = require('../models/index');
-const { users } = require('../models/users');
+const { payment, users } = require('../models/index');
 
 const paymentModel = payment(sequelizeInstance, sequelizeLibrary);
 const userModel = users(sequelizeInstance, sequelizeLibrary);
 module.exports = {
   paymentModel,
-  userModel
+  userModel,
 };
 
 
