@@ -18,6 +18,7 @@ const sequelizeInstance = new sequelizeLibrary(database, database_username, data
   dialect: sequelize_dialect,
   port: database_port,
   schema: database_schema,
+  logging: logger.debug,
 });
 
 logger.info("Connection sucefull to woorkit DB with Sequelize");
