@@ -6,11 +6,12 @@ module.exports = (sequelize, DataTypes) => {
       id: {
         primaryKey: true,
         allowNull: false,
-        type: DataTypes.SERIAL,
+        autoIncrement: true,
+        type: DataTypes.INTEGER,
       },
       name: {
         allowNull: false,
-        type: DataTypes.VARCHAR,
+        type: DataTypes.STRING,
       },
     },
   );

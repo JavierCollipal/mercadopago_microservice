@@ -6,10 +6,22 @@ module.exports = (sequelize, DataTypes) => {
       id: {
         primaryKey: true,
         allowNull: false,
-        type: DataTypes.UUID,
+        autoIncrement: true,
+        type: DataTypes.INTEGER,
       },
-      state: {
+      title: {
         allowNull: false,
+        type: DataTypes.STRING,
+      },
+      description: {
+        allowNull: false,
+        type: DataTypes.STRING,
+      },
+      picture_url: {
+        allowNull: false,
+        type: DataTypes.STRING,
+      },
+      unitPrice: {
         type: DataTypes.INTEGER,
       },
     },
