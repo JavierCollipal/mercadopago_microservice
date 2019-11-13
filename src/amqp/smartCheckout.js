@@ -35,7 +35,7 @@ const makeAPayerObject = (userData) => {
     {},
     {
       zip_code: "600000",
-      street_name: userData.address,
+      street_name: userData.address || undefined,
       street_number: 0,
     },
     userData.created_date,
@@ -46,6 +46,7 @@ const transactionHandler = (items, userId, preferenceId, state, postulationId) =
   logger.info("item:" + items);
   logger.info("user Id is:" + userId);
   logger.info("preference Id is:" + preferenceId);
+  logger.info("state Id is:" + preferenceId);
   logger.info("postulation Id is:" + postulationId);
 };
 
@@ -53,6 +54,7 @@ const msgHandler = (msg, ch) => {
   const message = JSON.parse(msg.content.toString());
   const items = message.items;
   const userData = getUserData(message.userId);
+
   userData
     .then(data => {
       const payer = makeAPayerObject(data);
@@ -72,6 +74,7 @@ const msgHandler = (msg, ch) => {
 
 const rpcChannel = () => {
   const channel = createChannel();
+
   channel
     .then(ch => {
       ch.assertQueue("payments_rpc", { durable: false }).then(q => {
