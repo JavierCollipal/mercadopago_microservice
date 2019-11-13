@@ -10,3 +10,8 @@ CREATE TABLE woorkit.users_transactions (
 ALTER TABLE woorkit.users_transactions ADD CONSTRAINT users_transactions_pk PRIMARY KEY (id);
 ALTER TABLE woorkit.users_transactions RENAME COLUMN itemid TO "itemId";
 ALTER TABLE woorkit.users_transactions RENAME COLUMN userid TO "userId";
+
+ALTER TABLE woorkit.users_transactions ADD createdat date NULL;
+ALTER TABLE woorkit.users_transactions ADD updatedat date NULL;
+ALTER TABLE woorkit.users_transactions RENAME COLUMN createdat TO "createdAt";
+ALTER TABLE woorkit.users_transactions RENAME COLUMN updatedat TO "updatedAt";

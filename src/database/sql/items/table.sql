@@ -12,7 +12,11 @@ alter table woorkit.items add CONSTRAINT items_pool_pk PRIMARY KEY (id);
 ALTER TABLE woorkit.items RENAME COLUMN categoryid TO "categoryId";
 ALTER TABLE woorkit.items RENAME COLUMN currencyid TO "currencyId";
 ALTER TABLE woorkit.items RENAME COLUMN unitprice TO "unitPrice";
-//RELATIONS
-ALTER TABLE woorkit.items ADD CONSTRAINT items_fk FOREIGN KEY ("categoryId") REFERENCES woorkit.items_categories(id);
+
+ALTER TABLE woorkit.items ADD CONSTRAINT items_fk FOREIGN KEY ("categoryId") REFERENCES woorkit.items(id);
 ALTER TABLE woorkit.items ADD CONSTRAINT items_fk_1 FOREIGN KEY ("currencyId") REFERENCES woorkit.items_currency(id);
 
+ALTER TABLE woorkit.items ADD createdat date NULL;
+ALTER TABLE woorkit.items ADD updatedat date NULL;
+ALTER TABLE woorkit.items RENAME COLUMN createdat TO "createdAt";
+ALTER TABLE woorkit.items RENAME COLUMN updatedat TO "updatedAt";

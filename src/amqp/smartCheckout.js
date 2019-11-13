@@ -2,7 +2,7 @@ const { MercadoPago, defaultPreferenceMaker } = require("../config/mercadoPago/m
 const onErr = require("../common/onErr");
 const { logger } = require("../config/logger/pino");
 const { createChannel } = require("../config/amqp/amqplib");
-const { userModel } = require("../database/index");
+const { userModel, userTransactionsModel } = require("../database/index");
 const payerMaker = require("../common/mercadopago/payer");
 //nest api job is getting all the items data so the microservice is only going to deal
 //with mercadopago Items,Payer and Preferences interface.
@@ -74,7 +74,7 @@ const msgHandler = (msg, ch) => {
 
 const rpcChannel = () => {
   const channel = createChannel();
-
+  userTransactionsModel.findAll().then( result => logger.info(result));
   channel
     .then(ch => {
       ch.assertQueue("payments_rpc", { durable: false }).then(q => {
