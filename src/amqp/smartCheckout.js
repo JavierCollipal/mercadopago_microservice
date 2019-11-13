@@ -6,7 +6,7 @@ const { userModel } = require("../database/index");
 const payerMaker = require("../common/mercadopago/payer");
 //nest api job is getting all the items data so the microservice is only going to deal
 //with mercadopago Items,Payer and Preferences interface.
-
+//test
 const smartCheckoutHandler = (preferences) => {
   return new Promise(((resolve, reject) => {
     MercadoPago.preferences.create(preferences).then(result => resolve(result)).catch(e => reject(e));
