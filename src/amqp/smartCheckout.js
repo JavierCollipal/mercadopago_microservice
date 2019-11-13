@@ -2,18 +2,20 @@ const { MercadoPago, defaultPreferenceMaker } = require("../config/mercadoPago/m
 const onErr = require("../common/onErr");
 const { logger } = require("../config/logger/pino");
 const { createChannel } = require("../config/amqp/amqplib");
-const { userModel, userTransactionsModel, itemModel} = require("../database/index");
+const { userModel, userTransactionsModel} = require("../database/index");
 const payerMaker = require("../common/mercadopago/payer");
 //nest api job is getting all the items data so the microservice is only going to deal
 //with mercadopago Items,Payer and Preferences interface.
 //test
 const smartCheckoutHandler = (preferences) => {
+
   return new Promise(((resolve, reject) => {
     MercadoPago.preferences.create(preferences).then(result => resolve(result)).catch(e => reject(e));
   }));
 };
 
 const getUserData = (userId) => {
+
   return new Promise(((resolve, reject) => {
     userModel.findOne({
       where: { id: userId },
@@ -24,6 +26,7 @@ const getUserData = (userId) => {
 };
 
 const makeAPayerObject = (userData) => {
+
   return payerMaker(
     userData.name,
     userData.lastName,
@@ -42,15 +45,20 @@ const makeAPayerObject = (userData) => {
   );
 };
 
-const transactionHandler = (items, userId, preferenceId, state, postulationId) => {
-  logger.info("item:" + items);
-  logger.info("user Id is:" + userId);
-  logger.info("preference Id is:" + preferenceId);
-  logger.info("state Id is:" + preferenceId);
-  logger.info("postulation Id is:" + postulationId);
+const transactionHandler = (items, userId, preferenceId, state) => {
+  console.log(preferenceId);
+  console.log(typeof preferenceId);
+  userTransactionsModel.create({
+    id: preferenceId,
+    itemId: items[0].id,
+    state: state,
+  })
+    .then(result => logger.info(result))
+    .catch(onErr);
 };
 
 const msgHandler = (msg, ch) => {
+
   const message = JSON.parse(msg.content.toString());
   const items = message.items;
   const userData = getUserData(message.userId);
@@ -74,7 +82,6 @@ const msgHandler = (msg, ch) => {
 
 const rpcChannel = () => {
   const channel = createChannel();
-  itemModel.findAll().then( result => logger.info(result));
   channel
     .then(ch => {
       ch.assertQueue("payments_rpc", { durable: false }).then(q => {

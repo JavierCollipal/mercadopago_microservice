@@ -4,9 +4,10 @@ module.exports = (sequelize, DataTypes) => {
     "users_transactions",
     {
       id: {
-        primaryKey: true,
-        allowNull: false,
         type: DataTypes.UUID,
+        primaryKey: true,
+        defaultValue: DataTypes.UUIDV4,
+        allowNull: false,
       },
       state: {
         allowNull: false,
