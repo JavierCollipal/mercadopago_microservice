@@ -15,3 +15,7 @@ ALTER TABLE woorkit.users_transactions ADD createdat date NULL;
 ALTER TABLE woorkit.users_transactions ADD updatedat date NULL;
 ALTER TABLE woorkit.users_transactions RENAME COLUMN createdat TO "createdAt";
 ALTER TABLE woorkit.users_transactions RENAME COLUMN updatedat TO "updatedAt";
+
+ALTER TABLE woorkit.users_transactions ADD transactionid varchar NULL;
+ALTER TABLE woorkit.users_transactions RENAME COLUMN transactionid TO "transactionId";
+ALTER TABLE woorkit.users_transactions RENAME COLUMN "transactionId" TO "preferenceId";

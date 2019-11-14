@@ -46,14 +46,14 @@ const makeAPayerObject = (userData) => {
 };
 
 const transactionHandler = (items, userId, preferenceId, state) => {
-  console.log(preferenceId);
-  console.log(typeof preferenceId);
+
   userTransactionsModel.create({
-    id: preferenceId,
+    preferenceId: preferenceId,
+    userId: userId,
     itemId: items[0].id,
     state: state,
   })
-    .then(result => logger.info(result))
+    .then(transaction => transaction.save())
     .catch(onErr);
 };
 
