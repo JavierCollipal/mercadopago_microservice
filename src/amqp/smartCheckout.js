@@ -58,6 +58,7 @@ const transactionHandler = (items, userId, preferenceId, state) => {
 const msgHandler = (msg, ch) => {
 
   const message = JSON.parse(msg.content.toString());
+  logger.info('rabbitqm message: '+ message)
   const userData = getUserData(message.userId);
   const items = [{
     id: 1,
