@@ -6,7 +6,7 @@ const onErr = require("../../common/onErr");
 //fundamental
 const handlePaymentNotification = payment => {
   axios.get("https://api.mercadopago.com/v1/payments/" + payment + "?access_token=" + mercadopago_sandbox_key)
-    .then(response => logger.info(response))
+    .then(response => logger.info(response.data))
     .catch(onErr);
   logger.info("paymentId: " + payment);
 };
