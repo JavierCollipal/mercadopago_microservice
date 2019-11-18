@@ -1,6 +1,18 @@
 const { logger } = require("../../config/logger/pino");
+const axios = require("axios");
+const { mercadopago_sandbox_key } = require("../../config/security/dotenv");
+const onErr = require("../../common/onErr");
+
+const config = {
+  headers: { "Authorization": "bearer " + mercadopago_sandbox_key },
+};
 //fundamental
-const handlePaymentNotification = payment => logger.info("paymentId: " +payment);
+const handlePaymentNotification = payment => {
+  axios.get("https://api.mercadopago.com/v1/payments/", config)
+    .then(response => logger.info(response))
+    .catch(onErr);
+  logger.info("paymentId: " + payment);
+};
 //fundamental
 const handleChargebackNotification = chargeback => logger.info("chargebackId: " + chargeback);
 
@@ -17,10 +29,10 @@ const handleMercadoPagoNotification = (notificationId, notificationType, notific
       handlePaymentNotification(notificationId);
       break;
     case "chargeback":
-      handleChargebackNotification();
+      handleChargebackNotification(notificationId);
       break;
     case "merchant_order":
-      handleMerchantOrderNotification();
+      handleMerchantOrderNotification(notificationId);
       break;
   }
 };
