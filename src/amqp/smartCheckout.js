@@ -74,7 +74,7 @@ const msgHandler = (msg, ch) => {
   userData
     .then(data => {
       const payer = makeAPayerObject(data);
-      const preferences = defaultPreferenceMaker(items[0], payer, message.postulationId);
+      const preferences = defaultPreferenceMaker(items, payer, message.postulationId);
       const responseFromMercadoPago = smartCheckoutHandler(preferences);
       responseFromMercadoPago
         .then(res => {
