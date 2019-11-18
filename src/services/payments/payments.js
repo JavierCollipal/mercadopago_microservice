@@ -3,12 +3,9 @@ const axios = require("axios");
 const { mercadopago_sandbox_key } = require("../../config/security/dotenv");
 const onErr = require("../../common/onErr");
 
-const config = {
-  headers: { "Authorization": "bearer " + mercadopago_sandbox_key },
-};
 //fundamental
 const handlePaymentNotification = payment => {
-  axios.get("https://api.mercadopago.com/v1/payments/"+payment, config)
+  axios.get("https://api.mercadopago.com/v1/payments/" + payment + "?access_token=" + mercadopago_sandbox_key)
     .then(response => logger.info(response))
     .catch(onErr);
   logger.info("paymentId: " + payment);
