@@ -11,7 +11,7 @@ const handleMercadoPagoNotification = (notificationId, notificationType, notific
 
   logger.info("Id of notification: " + notificationId);
   logger.info("topic of notification: " + notificationType);
-  logger.info("body of notification: " + JSON.parse(notificationBody));
+  logger.info("body of notification: " + JSON.stringify(notificationBody));
   switch (notificationType) {
     case "payment":
       handlePaymentNotification(notificationId);
