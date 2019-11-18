@@ -8,7 +8,7 @@ const config = {
 };
 //fundamental
 const handlePaymentNotification = payment => {
-  axios.get("https://api.mercadopago.com/v1/payments/", config)
+  axios.get("https://api.mercadopago.com/v1/payments/"+payment, config)
     .then(response => logger.info(response))
     .catch(onErr);
   logger.info("paymentId: " + payment);
