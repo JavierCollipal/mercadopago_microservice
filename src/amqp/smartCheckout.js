@@ -18,7 +18,7 @@ const getUserData = (userId) => {
 
   return new Promise(((resolve, reject) => {
     userModel.findByPk(userId)
-      .then(user => resolve(user))
+      .then(user => resolve(user.get({plain: true})))
       .catch(err => reject(err));
   }));
 };
@@ -71,6 +71,7 @@ const msgHandler = (msg, ch) => {
   }];
   userData
     .then(data => {
+      logger.info(data);
       const payer = makeAPayerObject(data);
       const preferences = defaultPreferenceMaker(items, payer, message.postulationId.toString());
       const responseFromMercadoPago = smartCheckoutHandler(preferences);
