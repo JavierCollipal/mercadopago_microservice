@@ -61,11 +61,20 @@ const msgHandler = (msg, ch) => {
 
   const message = JSON.parse(msg.content.toString());
   const userData = getUserData(message.userId);
-
+  const items = [{
+        id:1,
+        title: "desbloquear candidatos",
+        description: "para ver los candidatos de una postulacion",
+        picture_url: '',
+        category_id: 'servicios',
+        quantity:1,
+        currency_id: 'CLP',
+        unit_price: 10000,
+      }];
   userData
     .then(data => {
       const payer = makeAPayerObject(data);
-      const preferences = defaultPreferenceMaker(message.items, payer, message.postulationId);
+      const preferences = defaultPreferenceMaker(items[0], payer, message.postulationId);
       const responseFromMercadoPago = smartCheckoutHandler(preferences);
       responseFromMercadoPago
         .then(res => {
