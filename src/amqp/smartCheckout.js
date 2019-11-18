@@ -58,7 +58,7 @@ const transactionHandler = (items, userId, preferenceId, state) => {
 const msgHandler = (msg, ch) => {
 
   const message = JSON.parse(msg.content.toString());
-  logger.info('rabbitqm message: '+ message)
+  logger.info('rabbitqm message: '+ message.userId)
   const userData = getUserData(message.userId);
   const items = [{
     id: 1,
@@ -76,6 +76,7 @@ const msgHandler = (msg, ch) => {
       const payer = makeAPayerObject(data);
       const preferences = defaultPreferenceMaker(items, payer, message.postulationId.toString());
       const responseFromMercadoPago = smartCheckoutHandler(preferences);
+
       responseFromMercadoPago
         .then(res => {
           transactionHandler(message.items, message.userId, res.body.id, 1);
