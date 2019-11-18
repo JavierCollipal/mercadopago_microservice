@@ -1,8 +1,11 @@
 const { paymentService } = require("../services/index");
+const { dataResponse } = require("../common/response");
 
 const paymentController = {
   handleMercadoPagoNotification(req, res) {
-    paymentService.handleMercadoPagoNotification(req);
+    console.log(req.query);
+    console.log(req.params);
+    paymentService.handleMercadoPagoNotification(req.body);
     res.sendStatus(201);
   },
 };

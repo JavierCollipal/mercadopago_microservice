@@ -16,6 +16,7 @@ const connectionParams = {
 };
 //We make the connection only one time
 //Remember to never close the rabbit connection in prod.
+logger.info("Connecting to woorkit-rabbitQM with Ampqlib");
 const open = require("amqplib")
   .connect(connectionParams)
   .catch(onErr);

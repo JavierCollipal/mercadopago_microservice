@@ -1,15 +1,17 @@
 module.exports = (sequelize, DataTypes) => {
+
   return sequelize.define(
-    'cat',
+    "items_currency",
     {
-      state: {
-        type: DataTypes.STRING,
-        field: 'state',
-      },
       id: {
-        type: DataTypes.INTEGER,
         primaryKey: true,
+        allowNull: false,
         autoIncrement: true,
+        type: DataTypes.INTEGER,
+      },
+      name: {
+        allowNull: false,
+        type: DataTypes.STRING,
       },
     },
   );
