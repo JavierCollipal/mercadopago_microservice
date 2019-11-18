@@ -17,10 +17,8 @@ const smartCheckoutHandler = (preferences) => {
 const getUserData = (userId) => {
 
   return new Promise(((resolve, reject) => {
-    userModel.findOne({
-      where: { id: userId },
-    })
-      .then(user => resolve(user.get({ plain: true })))
+    userModel.findByPk(userId)
+      .then(user => resolve(user))
       .catch(err => reject(err));
   }));
 };
@@ -29,7 +27,7 @@ const makeAPayerObject = (userData) => {
 
   return payerMaker(
     userData.name,
-    userData.lastName,
+    userData.lastName || "",
     userData.email,
     {
       area_code: "+56",
@@ -62,15 +60,15 @@ const msgHandler = (msg, ch) => {
   const message = JSON.parse(msg.content.toString());
   const userData = getUserData(message.userId);
   const items = [{
-        id:1,
-        title: "desbloquear candidatos",
-        description: "para ver los candidatos de una postulacion",
-        picture_url: '',
-        category_id: 'servicios',
-        quantity:1,
-        currency_id: 'CLP',
-        unit_price: 10000,
-      }];
+    id: 1,
+    title: "desbloquear candidatos",
+    description: "para ver los candidatos de una postulacion",
+    picture_url: "",
+    category_id: "servicios",
+    quantity: 1,
+    currency_id: "CLP",
+    unit_price: 10000,
+  }];
   userData
     .then(data => {
       const payer = makeAPayerObject(data);
@@ -85,7 +83,8 @@ const msgHandler = (msg, ch) => {
           ch.ack(msg);
         })
         .catch(onErr);
-    });
+    })
+    .catch(onErr());
 };
 
 const rpcChannel = () => {
