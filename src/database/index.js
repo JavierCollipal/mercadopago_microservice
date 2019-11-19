@@ -8,7 +8,7 @@ const itemCategoryModel = items_categories(sequelizeInstance, sequelizeLibrary);
 const itemCurrencyModel = items_currency(sequelizeInstance, sequelizeLibrary);
 /*relations*/
 
-userTransactionsModel.belongsTo(companyUser);
+userTransactionsModel.belongsTo(companyUserModel);
 userTransactionsModel.belongsTo(itemModel);
 itemModel.belongsTo(itemCategoryModel,{
   foreignKey:'categoryId'
