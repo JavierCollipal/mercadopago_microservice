@@ -18,8 +18,10 @@ const getUserData = (userId) => {
   try {
     return new Promise(((resolve, reject) => {
     userModel.findByPk(userId)
-      .then(user => resolve(user.get({plain: true})))
-      .catch(err => reject(err));
+      .then(user => {
+          resolve(user.get({plain: true}))
+      })
+      .catch(err => { logger.info('entro al catch este pelotudo: '+ err)});
   }));
   }
   catch (e) {
@@ -84,7 +86,7 @@ const msgHandler = (msg, ch) => {
         })
         .catch(onErr);
     })
-    .catch(onErr());
+    .catch(err => onErr(err));
 };
 
 const rpcChannel = () => {
