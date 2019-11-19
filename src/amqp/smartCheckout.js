@@ -29,9 +29,9 @@ const makeAPayerObject = (userData) => {
     userData.name,
     userData.lastName || "",
     userData.email,
-    null,
-    null,
-    null,
+    {},
+    {},
+    {},
     null,
   );
 };
