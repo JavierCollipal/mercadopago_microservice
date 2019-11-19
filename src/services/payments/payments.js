@@ -22,19 +22,16 @@ const finishTransaction = (payment, preferenceId, paymentStatus) => {
 
 const transformMercadopagoStatus = mercadopagoStatus => {
   logger.info("entro a la funcion transformMercadopagoStatus");
-  const dbStatus = 0;
+  let dbStatus = 0;
   switch (mercadopagoStatus) {
-    case 1:
-
+    case 'APRO':
+      dbStatus = 1;
       break;
-    case 2:
-
-      break;
-    case 3:
-
+    case 'CONT':
+      dbStatus = 2;
       break;
     default:
-
+      dbStatus = 3;
       break;
   }
   return dbStatus;
@@ -48,6 +45,7 @@ const manageMerchantOrder = (payment, order) => {
 
 const managePaymentTransaction = payment => {
   logger.info("entro a la funcion managePaymentTransaction");
+  console.log(payment);
   const merchantOrder = getMercadopagoMerchantOrder(payment.order.id);
   logger.info("obtuvo la merchant order");
   logger.info(JSON.stringify(merchantOrder));
@@ -66,11 +64,8 @@ const handleChargebackNotification = chargeback => logger.info("chargebackId: " 
 //revisar
 const handleMerchantOrderNotification = merchantOrder => logger.info("merchantOrderId:" + merchantOrder);
 
-const handleMercadoPagoNotification = (notificationId, notificationType, notificationBody) => {
+const handleMercadoPagoNotification = (notificationId, notificationType) => {
   logger.info("entro a la funcion handleMercadoPagoNotification");
-  logger.info("Id of notification: " + notificationId);
-  logger.info("topic of notification: " + notificationType);
-  logger.info("body of notification: " + JSON.stringify(notificationBody));
   switch (notificationType) {
     case "payment":
       handlePaymentNotification(notificationId);

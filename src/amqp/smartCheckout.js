@@ -42,7 +42,6 @@ const makeAPayerObject = (userData) => {
 };
 
 const transactionHandler = (items, companyUserId, preferenceId, state) => {
-  logger.info("la id del usuario en la funcion transaction" + companyUserId);
   userTransactionsModel.create({
     preferenceId: preferenceId,
     companyUserId: companyUserId,
@@ -56,7 +55,7 @@ const transactionHandler = (items, companyUserId, preferenceId, state) => {
 const msgHandler = (msg, ch) => {
 
   const message = JSON.parse(msg.content.toString());
-  logger.info("rabbitqm message: " + message.userId);
+
   const userData = getUserData(message.userId);
   const items = [{
     id: 1,
@@ -76,7 +75,6 @@ const msgHandler = (msg, ch) => {
 
       responseFromMercadoPago
         .then(res => {
-          logger.info("ya obtuvo la respuesta de mercadopago");
           transactionHandler(message.items, message.userId, res.body.id, 1);
           ch.sendToQueue(msg.properties.replyTo, Buffer.from(res.body.init_point.toString()), {
             correlationId: msg.properties.correlationId,
