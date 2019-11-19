@@ -43,10 +43,10 @@ const makeAPayerObject = (userData) => {
 };
 
 const transactionHandler = (items, userId, preferenceId, state) => {
-  logger.info(userId);
+  logger.info("la id del usuario en la funcion transaction"+userId);
   userTransactionsModel.create({
     preferenceId: preferenceId,
-    userId: userId,
+    companyUserId: userId,
     itemId: items[0].id,
     state: state,
   })
@@ -71,13 +71,13 @@ const msgHandler = (msg, ch) => {
   }];
   userData
     .then(data => {
-      logger.info(data);
       const payer = makeAPayerObject(data);
       const preferences = defaultPreferenceMaker(items, payer, message.postulationId.toString());
       const responseFromMercadoPago = smartCheckoutHandler(preferences);
 
       responseFromMercadoPago
         .then(res => {
+          logger.info('ya obtuvo la respuesta de mercadopago')
           transactionHandler(message.items, message.userId, res.body.id, 1);
           ch.sendToQueue(msg.properties.replyTo, Buffer.from(res.body.init_point.toString()), {
             correlationId: msg.properties.correlationId,
