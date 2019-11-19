@@ -1,4 +1,4 @@
-const users = require("./users");
+const users = require("./companies_users");
 const users_transactions = require('./users_transactions');
 const items = require('./items');
 const items_categories = require('./items_categories');

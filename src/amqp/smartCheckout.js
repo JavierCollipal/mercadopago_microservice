@@ -24,22 +24,15 @@ const getUserData = (userId) => {
 };
 
 const makeAPayerObject = (userData) => {
-
+  /*this is the only data we can get from companies_users*/
   return payerMaker(
     userData.name,
     userData.lastName || "",
     userData.email,
-    {
-      area_code: "+56",
-      number: parseInt(userData.cellphone),
-    },
-    {},
-    {
-      zip_code: "600000",
-      street_name: userData.address || undefined,
-      street_number: 0,
-    },
-    userData.created_date,
+    null,
+    null,
+    null,
+    null,
   );
 };
 
