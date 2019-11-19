@@ -1,7 +1,7 @@
 const { sequelizeInstance, sequelizeLibrary } = require('./sequelize');
-const { users, users_transactions, items, items_categories, items_currency} = require('../models/index');
+const { companyUsers, users_transactions, items, items_categories, items_currency} = require('../models/index');
 /*models*/
-const companyUser = users(sequelizeInstance, sequelizeLibrary);
+const companyUser = companyUsers(sequelizeInstance, sequelizeLibrary);
 const userTransactionsModel = users_transactions(sequelizeInstance, sequelizeLibrary);
 const itemModel = items(sequelizeInstance, sequelizeLibrary);
 const itemCategoryModel = items_categories(sequelizeInstance, sequelizeLibrary);
