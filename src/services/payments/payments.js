@@ -23,17 +23,17 @@ const finishTransaction = (preferenceId, paymentStatus) => {
 };
 
 const transformMercadopagoStatus = mercadopagoStatus => {
-  logger.info("entro a la funcion transformMercadopagoStatus");
   logger.info(mercadopagoStatus);
   let dbStatus = 0;
   switch (mercadopagoStatus) {
-    case "APRO":
+
+    case "in_process":
       dbStatus = 1;
       break;
-    case "CONT":
+    case "approved":
       dbStatus = 2;
       break;
-    default:
+    case "rejected":
       dbStatus = 3;
       break;
   }
@@ -41,20 +41,18 @@ const transformMercadopagoStatus = mercadopagoStatus => {
 };
 
 const manageMerchantOrder = (payment, order) => {
-  logger.info("entro a la funcion manageMerchantOrder");
   const dbStatus = transformMercadopagoStatus(payment.status);
   finishTransaction(order.preference_id, dbStatus);
 };
 
 const managePaymentTransaction = payment => {
-  logger.info("entro a la funcion managePaymentTransaction");
+
   const merchantOrder = getMercadopagoMerchantOrder(payment.order.id);
   merchantOrder
     .then(order => manageMerchantOrder(payment, order));
 };
 //fundamental
 const handlePaymentNotification = payment => {
-  logger.info("entro a la funcion handlePaymentNotification");
   axios.get("https://api.mercadopago.com/v1/payments/" + payment + "?access_token=" + mercadopago_sandbox_key)
     .then(response => managePaymentTransaction(response.data))
     .catch(onErr);
@@ -66,7 +64,7 @@ const handleChargebackNotification = chargeback => logger.info("chargebackId: " 
 const handleMerchantOrderNotification = merchantOrder => logger.info("merchantOrderId:" + merchantOrder);
 
 const handleMercadoPagoNotification = (notificationId, notificationType) => {
-  logger.info("entro a la funcion handleMercadoPagoNotification");
+
   switch (notificationType) {
     case "payment":
       handlePaymentNotification(notificationId);
