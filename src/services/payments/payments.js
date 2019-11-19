@@ -6,22 +6,26 @@ const onErr = require("../../common/onErr");
 
 const getMercadopagoMerchantOrder = orderId => {
   return axios.get("https://api.mercadopago.com/merchant_orders/" + orderId + "?access_token=" + mercadopago_sandbox_key)
-    .then(res => res.data)
+    .then(res => {
+      console.log("merchant order from axios:");
+      console.log(res);
+      res.data
+    })
     .catch(onErr);
 };
 
 const changePostulationState = (postulationId, paymentStatus) => {
 };
 
-const finishTransaction = (payment, preferenceId, paymentStatus) => {
+const finishTransaction = (preferenceId, paymentStatus) => {
   logger.info("entro a la funcion finishTransaction");
-  logger.info(payment);
-  logger.info(preferenceId);
-  logger.info(paymentStatus);
+  logger.info("id de preferencia: "+preferenceId);
+  logger.info("id de pago: "+paymentStatus);
 };
 
-const transformMercadopagoStatus = mercadopagoStatus => {
+const transformMercadopagoStatus = mercadopagoStatus =>   {
   logger.info("entro a la funcion transformMercadopagoStatus");
+  logger.info(mercadopagoStatus);
   let dbStatus = 0;
   switch (mercadopagoStatus) {
     case "APRO":
@@ -40,7 +44,7 @@ const transformMercadopagoStatus = mercadopagoStatus => {
 const manageMerchantOrder = (payment, order) => {
   logger.info("entro a la funcion manageMerchantOrder");
   const dbStatus = transformMercadopagoStatus(payment.status);
-  finishTransaction(payment.id, order.preference_id, dbStatus);
+  finishTransaction(order.preference_id, dbStatus);
 };
 
 const managePaymentTransaction = payment => {
@@ -48,7 +52,8 @@ const managePaymentTransaction = payment => {
   const merchantOrder = getMercadopagoMerchantOrder(payment.order.id);
   logger.info("obtuvo la merchant order");
   logger.info(JSON.stringify(merchantOrder));
-  merchantOrder.then(order => manageMerchantOrder(payment, order));
+  merchantOrder
+    .then(order => manageMerchantOrder(payment, order));
 };
 //fundamental
 const handlePaymentNotification = payment => {
