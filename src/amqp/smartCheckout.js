@@ -21,7 +21,7 @@ const getUserData = (userId) => {
       .then(user => {
           resolve(user.get({plain: true}))
       })
-      .catch(err => { logger.info('entro al catch este pelotudo: '+ err)});
+      .catch(err => reject(err));
   }));
   }
   catch (e) {
