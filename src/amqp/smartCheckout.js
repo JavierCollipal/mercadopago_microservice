@@ -37,7 +37,7 @@ const makeAPayerObject = (userData) => {
 };
 
 const transactionHandler = (items, userId, preferenceId, state) => {
-
+  logger.info(userId);
   userTransactionsModel.create({
     preferenceId: preferenceId,
     userId: userId,
