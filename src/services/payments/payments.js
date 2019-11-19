@@ -24,10 +24,10 @@ const transformMercadopagoStatus = mercadopagoStatus => {
   logger.info("entro a la funcion transformMercadopagoStatus");
   let dbStatus = 0;
   switch (mercadopagoStatus) {
-    case 'APRO':
+    case "APRO":
       dbStatus = 1;
       break;
-    case 'CONT':
+    case "CONT":
       dbStatus = 2;
       break;
     default:
@@ -55,7 +55,7 @@ const managePaymentTransaction = payment => {
 const handlePaymentNotification = payment => {
   logger.info("entro a la funcion handlePaymentNotification");
   axios.get("https://api.mercadopago.com/v1/payments/" + payment + "?access_token=" + mercadopago_sandbox_key)
-    .then(response => managePaymentTransaction(response.body))
+    .then(response => managePaymentTransaction(response.data))
     .catch(onErr);
 };
 //fundamental
