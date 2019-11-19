@@ -17,14 +17,13 @@ const smartCheckoutHandler = (preferences) => {
 const getUserData = (userId) => {
   try {
     return new Promise(((resolve, reject) => {
-    companyUserModel.findByPk(userId)
-      .then(user => {
-          resolve(user.get({plain: true}))
-      })
-      .catch(err => reject(err));
-  }));
-  }
-  catch (e) {
+      companyUserModel.findByPk(userId)
+        .then(user => {
+          resolve(user.get({ plain: true }));
+        })
+        .catch(err => reject(err));
+    }));
+  } catch (e) {
     onErr(e);
   }
 };
@@ -42,11 +41,11 @@ const makeAPayerObject = (userData) => {
   );
 };
 
-const transactionHandler = (items, userId, preferenceId, state) => {
-  logger.info("la id del usuario en la funcion transaction"+userId);
+const transactionHandler = (items, companyUserId, preferenceId, state) => {
+  logger.info("la id del usuario en la funcion transaction" + companyUserId);
   userTransactionsModel.create({
     preferenceId: preferenceId,
-    companyUserId: userId,
+    companyUserId: companyUserId,
     itemId: items[0].id,
     state: state,
   })
@@ -57,7 +56,7 @@ const transactionHandler = (items, userId, preferenceId, state) => {
 const msgHandler = (msg, ch) => {
 
   const message = JSON.parse(msg.content.toString());
-  logger.info('rabbitqm message: '+ message.userId)
+  logger.info("rabbitqm message: " + message.userId);
   const userData = getUserData(message.userId);
   const items = [{
     id: 1,
@@ -77,7 +76,7 @@ const msgHandler = (msg, ch) => {
 
       responseFromMercadoPago
         .then(res => {
-          logger.info('ya obtuvo la respuesta de mercadopago')
+          logger.info("ya obtuvo la respuesta de mercadopago");
           transactionHandler(message.items, message.userId, res.body.id, 1);
           ch.sendToQueue(msg.properties.replyTo, Buffer.from(res.body.init_point.toString()), {
             correlationId: msg.properties.correlationId,
