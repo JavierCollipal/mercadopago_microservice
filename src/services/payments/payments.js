@@ -6,7 +6,7 @@ const onErr = require("../../common/onErr");
 
 const getMercadopagoMerchantOrder = orderId => {
   return axios.get("https://api.mercadopago.com/merchant_orders/" + orderId + "?access_token=" + mercadopago_sandbox_key)
-    .then(res => res.body)
+    .then(res => res.data)
     .catch(onErr);
 };
 
@@ -45,7 +45,6 @@ const manageMerchantOrder = (payment, order) => {
 
 const managePaymentTransaction = payment => {
   logger.info("entro a la funcion managePaymentTransaction");
-  console.log(payment);
   const merchantOrder = getMercadopagoMerchantOrder(payment.order.id);
   logger.info("obtuvo la merchant order");
   logger.info(JSON.stringify(merchantOrder));
