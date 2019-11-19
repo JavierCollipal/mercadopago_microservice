@@ -93,7 +93,7 @@ const rpcChannel = () => {
   const channel = createChannel();
   channel
     .then(ch => {
-      ch.assertQueue("payments_rpc", { durable: false }).then(q => {
+      ch.assertQueue("candidates_unlock_rpc", { durable: false }).then(q => {
         ch.prefetch(1);
         logger.info("waiting for RPC requests on candidates unlock Checkout");
         ch.consume(q.queue, msg => msgHandler(msg, ch));
