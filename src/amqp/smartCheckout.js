@@ -2,7 +2,7 @@ const { MercadoPago, defaultPreferenceMaker } = require("../config/mercadoPago/m
 const onErr = require("../common/onErr");
 const { logger } = require("../config/logger/pino");
 const { createChannel } = require("../config/amqp/amqplib");
-const { userModel, userTransactionsModel } = require("../database/index");
+const { companyUserModel, userTransactionsModel } = require("../database/index");
 const payerMaker = require("../common/mercadopago/payer");
 //nest api job is getting all the items data so the microservice is only going to deal
 //with mercadopago Items,Payer and Preferences interface.
@@ -15,41 +15,37 @@ const smartCheckoutHandler = (preferences) => {
 };
 
 const getUserData = (userId) => {
-
-  return new Promise(((resolve, reject) => {
-    userModel.findOne({
-      where: { id: userId },
-    })
-      .then(user => resolve(user.get({ plain: true })))
-      .catch(err => reject(err));
-  }));
+  try {
+    return new Promise(((resolve, reject) => {
+      companyUserModel.findByPk(userId)
+        .then(user => {
+          resolve(user.get({ plain: true }));
+        })
+        .catch(err => reject(err));
+    }));
+  } catch (e) {
+    onErr(e);
+  }
 };
 
 const makeAPayerObject = (userData) => {
-
+  /*this is the only data we can get from companies_users*/
   return payerMaker(
     userData.name,
-    userData.lastName,
+    userData.lastName || "",
     userData.email,
-    {
-      area_code: "+56",
-      number: parseInt(userData.cellphone),
-    },
     {},
-    {
-      zip_code: "600000",
-      street_name: userData.address || undefined,
-      street_number: 0,
-    },
-    userData.created_date,
+    {},
+    {},
+    null,
   );
 };
 
-const transactionHandler = (items, userId, preferenceId, state) => {
-
+const transactionHandler = (items, companyUserId, preferenceId, state) => {
+  logger.info("la id del usuario en la funcion transaction" + companyUserId);
   userTransactionsModel.create({
     preferenceId: preferenceId,
-    userId: userId,
+    companyUserId: companyUserId,
     itemId: items[0].id,
     state: state,
   })
@@ -60,15 +56,27 @@ const transactionHandler = (items, userId, preferenceId, state) => {
 const msgHandler = (msg, ch) => {
 
   const message = JSON.parse(msg.content.toString());
+  logger.info("rabbitqm message: " + message.userId);
   const userData = getUserData(message.userId);
-
+  const items = [{
+    id: 1,
+    title: "desbloquear candidatos",
+    description: "para ver los candidatos de una postulacion",
+    picture_url: "",
+    category_id: "servicios",
+    quantity: 1,
+    currency_id: "CLP",
+    unit_price: 10000,
+  }];
   userData
     .then(data => {
       const payer = makeAPayerObject(data);
-      const preferences = defaultPreferenceMaker(message.items, payer, message.postulationId);
+      const preferences = defaultPreferenceMaker(items, payer, message.postulationId.toString());
       const responseFromMercadoPago = smartCheckoutHandler(preferences);
+
       responseFromMercadoPago
         .then(res => {
+          logger.info("ya obtuvo la respuesta de mercadopago");
           transactionHandler(message.items, message.userId, res.body.id, 1);
           ch.sendToQueue(msg.properties.replyTo, Buffer.from(res.body.init_point.toString()), {
             correlationId: msg.properties.correlationId,
@@ -76,14 +84,15 @@ const msgHandler = (msg, ch) => {
           ch.ack(msg);
         })
         .catch(onErr);
-    });
+    })
+    .catch(err => onErr(err));
 };
 
 const rpcChannel = () => {
   const channel = createChannel();
   channel
     .then(ch => {
-      ch.assertQueue("payments_rpc", { durable: false }).then(q => {
+      ch.assertQueue("candidates_unlock_rpc", { durable: false }).then(q => {
         ch.prefetch(1);
         logger.info("waiting for RPC requests on candidates unlock Checkout");
         ch.consume(q.queue, msg => msgHandler(msg, ch));
