@@ -14,10 +14,14 @@ const changePostulationState = (postulationId, paymentStatus) => {
 };
 
 const finishTransaction = (payment, preferenceId, paymentStatus) => {
+  logger.info("entro a la funcion finishTransaction");
   logger.info(payment);
   logger.info(preferenceId);
+  logger.info(paymentStatus);
 };
+
 const transformMercadopagoStatus = mercadopagoStatus => {
+  logger.info("entro a la funcion transformMercadopagoStatus");
   const dbStatus = 0;
   switch (mercadopagoStatus) {
     case 1:
@@ -35,13 +39,23 @@ const transformMercadopagoStatus = mercadopagoStatus => {
   }
   return dbStatus;
 };
+
+const manageMerchantOrder = (payment, order) => {
+  logger.info("entro a la funcion manageMerchantOrder");
+  const dbStatus = transformMercadopagoStatus(payment.status);
+  finishTransaction(payment.id, order.preference_id, dbStatus);
+};
+
 const managePaymentTransaction = payment => {
+  logger.info("entro a la funcion managePaymentTransaction");
   const merchantOrder = getMercadopagoMerchantOrder(payment.order.id);
-  logger.info(merchantOrder);
-  finishTransaction(payment.id, merchantOrder.id, payment.status);
+  logger.info("obtuvo la merchant order");
+  logger.info(JSON.stringify(merchantOrder));
+  merchantOrder.then(order => manageMerchantOrder(payment, order));
 };
 //fundamental
 const handlePaymentNotification = payment => {
+  logger.info("entro a la funcion handlePaymentNotification");
   axios.get("https://api.mercadopago.com/v1/payments/" + payment + "?access_token=" + mercadopago_sandbox_key)
     .then(response => managePaymentTransaction(response.body))
     .catch(onErr);
@@ -53,7 +67,7 @@ const handleChargebackNotification = chargeback => logger.info("chargebackId: " 
 const handleMerchantOrderNotification = merchantOrder => logger.info("merchantOrderId:" + merchantOrder);
 
 const handleMercadoPagoNotification = (notificationId, notificationType, notificationBody) => {
-
+  logger.info("entro a la funcion handleMercadoPagoNotification");
   logger.info("Id of notification: " + notificationId);
   logger.info("topic of notification: " + notificationType);
   logger.info("body of notification: " + JSON.stringify(notificationBody));
