@@ -12,13 +12,18 @@ const {
 
 //for production
 logger.info("Connecting to woorkit DB with Sequelize");
-const sequelizeInstance = new sequelizeLibrary(database, database_username, database_password, {
-  host: database_host,
-  dialect: sequelize_dialect,
-  port: database_port,
-  schema: database_schema,
-  logging: logger.debug,
-});
+const sequelizeInstance = new sequelizeLibrary(
+  database,
+  database_username,
+  database_password,
+  {
+    host: database_host,
+    dialect: sequelize_dialect,
+    port: database_port,
+    schema: database_schema,
+    logging: logger.debug,
+  },
+);
 
 logger.info("Connection sucefull to woorkit DB with Sequelize");
 module.exports = {
