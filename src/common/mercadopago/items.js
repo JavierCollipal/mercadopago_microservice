@@ -5,9 +5,9 @@ module.exports = (
   description,
   picture_url,
   category_id,
-  quantity,
   currency_id,
-  unit_price,
+  quantity,
+  unit_price
 ) =>
   Object.freeze({
     id,
@@ -17,5 +17,5 @@ module.exports = (
     category_id,
     quantity,
     currency_id,
-    unit_price,
+    unit_price
   });

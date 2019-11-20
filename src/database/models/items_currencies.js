@@ -1,7 +1,7 @@
 module.exports = (sequelize, DataTypes) => {
 
   return sequelize.define(
-    "items_currency",
+    "items_currencies",
     {
       id: {
         primaryKey: true,

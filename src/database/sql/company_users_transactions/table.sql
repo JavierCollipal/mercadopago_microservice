@@ -1,4 +1,4 @@
-CREATE TABLE woorkit.users_transactions (
+CREATE TABLE woorkit.company_users_transactions (
 	id uuid NOT NULL,
 	itemid int4 NOT NULL,
 	companyuserid uuid NOT NULL,
