@@ -15,17 +15,12 @@ const smartCheckoutHandler = (preferences) => {
 };
 
 const getUserData = (userId) => {
-  try {
-    return new Promise(((resolve, reject) => {
-      companyUserModel.findByPk(userId)
-        .then(user => {
-          resolve(user.get({ plain: true }));
-        })
-        .catch(err => reject(err));
-    }));
-  } catch (e) {
-    onErr(e);
-  }
+
+  return new Promise(((resolve, reject) => {
+    companyUserModel.findByPk(userId)
+      .then(user => resolve(user.get({ plain: true })))
+      .catch(err => reject(err));
+  }));
 };
 
 const makeAPayerObject = (userData) => {

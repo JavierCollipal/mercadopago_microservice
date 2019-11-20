@@ -2,9 +2,10 @@ const { logger } = require("../../config/logger/pino");
 const axios = require("axios");
 const { mercadopago_sandbox_key } = require("../../config/security/dotenv");
 const onErr = require("../../common/onErr");
+const { userTransactionsModel, postulationModel } = require("../../database/index");
 
 
-const getMercadopagoMerchantOrder = orderId => {
+const getMerchantOrderData = orderId => {
   return new Promise((resolve, reject) => {
 
     axios.get("https://api.mercadopago.com/merchant_orders/" + orderId + "?access_token=" + mercadopago_sandbox_key)
@@ -13,17 +14,38 @@ const getMercadopagoMerchantOrder = orderId => {
   });
 };
 
-const changePostulationState = (postulationId, paymentStatus) => {
+const getPaymentData = paymentId => {
+  return new Promise((resolve, reject) => {
+    axios.get("https://api.mercadopago.com/v1/payments/" + paymentId + "?access_token=" + mercadopago_sandbox_key)
+      .then(response => resolve(response.data))
+      .catch(err => reject(err));
+  });
+};
+//
+const updatePostulationState = (postulationId, paymentStatus) => {
+
+  postulationModel.update(
+    { payStatus: paymentStatus },
+    { where: { id: postulationId } },
+  );
 };
 
-const finishTransaction = (preferenceId, paymentStatus) => {
-  logger.info("entro a la funcion finishTransaction");
-  logger.info("id de preferencia: " + preferenceId);
-  logger.info("estado del pago para nuestra db: " + paymentStatus);
+const updateTransactionState = (preferenceId, paymentStatus) => {
+
+  userTransactionsModel.update(
+    { state: paymentStatus },
+    { where: { preferenceId: preferenceId } },
+  );
+};
+
+const finishTransaction = (preferenceId, paymentStatus, postulationId) => {
+
+  updatePostulationState(postulationId, paymentStatus);
+  updateTransactionState(preferenceId, paymentStatus);
 };
 
 const transformMercadopagoStatus = mercadopagoStatus => {
-  logger.info(mercadopagoStatus);
+
   let dbStatus = 0;
   switch (mercadopagoStatus) {
 
@@ -41,21 +63,27 @@ const transformMercadopagoStatus = mercadopagoStatus => {
 };
 
 const manageMerchantOrder = (payment, order) => {
+
   const dbStatus = transformMercadopagoStatus(payment.status);
-  finishTransaction(order.preference_id, dbStatus);
+  finishTransaction(order.preference_id, dbStatus, payment.external_reference);
 };
 
 const managePaymentTransaction = payment => {
 
-  const merchantOrder = getMercadopagoMerchantOrder(payment.order.id);
+  const merchantOrder = getMerchantOrderData(payment.order.id);
   merchantOrder
-    .then(order => manageMerchantOrder(payment, order));
+    .then(order => manageMerchantOrder(payment, order))
+    .catch(err => onErr(err));
+
 };
 //fundamental
-const handlePaymentNotification = payment => {
-  axios.get("https://api.mercadopago.com/v1/payments/" + payment + "?access_token=" + mercadopago_sandbox_key)
-    .then(response => managePaymentTransaction(response.data))
-    .catch(onErr);
+
+const handlePaymentNotification = paymentId => {
+
+  const paymentData = getPaymentData(paymentId);
+  paymentData
+    .then(payment => managePaymentTransaction(payment))
+    .catch(err => onErr(err));
 };
 //fundamental
 const handleChargebackNotification = chargeback => logger.info("chargebackId: " + chargeback);
