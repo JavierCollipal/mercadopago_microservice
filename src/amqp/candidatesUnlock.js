@@ -18,7 +18,7 @@ const createPreference = (user, item, postulationId) => {
 const msgHandler = (msg, ch) => {
   const message = JSON.parse(msg.content.toString());
   const userData = companyUserModule.getUserData(message.userId);
-  const itemData = itemModule.findOneById(1);
+  const itemData = itemModule.findOneById(message.items[0]);
 
   Promise.all([userData, itemData]).then(values => {
     const user = values[0];
