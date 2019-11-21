@@ -1,5 +1,5 @@
 const { postulationTransactionModel } = require("../database/index");
-const { logger } = require("../config/logger/pino");
+const onErr = require("../common/onErr");
 
 const createTransaction = (postulationId, transactionId) => {
   postulationTransactionModel
@@ -8,7 +8,7 @@ const createTransaction = (postulationId, transactionId) => {
       transactionId
     })
     .then(transaction => transaction.save())
-    .catch(err => logger.error(err));
+    .catch(onErr);
 };
 
 const postulationTransactionModule = {

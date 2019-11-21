@@ -9,6 +9,11 @@ const registerPostulationTransaction = (preferenceId, postulationId) => {
   const transaction = companyUserTransactionModule.findTransactionWithPreferenceId(preferenceId);
   transaction
     .then(transaction => {
+      logger.info("transaction encontrada: "+transaction);
+      logger.info("id de postulacion: "+postulationId);
+      logger.info("id de preferencia: "+postulationId);
+      logger.info("id de preferencia: "+preferenceId);
+      logger.info("va entrar a: postulationTransactionModule.createTransaction")
       postulationTransactionModule.createTransaction(postulationId, transaction.id);
     })
     .catch(onErr);
