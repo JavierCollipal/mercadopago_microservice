@@ -1,5 +1,5 @@
 const { companyUserTransactionsModel } = require("../database/index");
-const { logger } = require("../config/logger/pino");
+const onErr = require("../common/onErr");
 
 const createTransaction = (itemId, companyUserId, preferenceId, state) => {
   companyUserTransactionsModel
@@ -10,11 +10,33 @@ const createTransaction = (itemId, companyUserId, preferenceId, state) => {
       state
     })
     .then(transaction => transaction.save())
-    .catch(err => logger.error(err));
+    .catch(onErr);
+};
+
+const findTransactionWithPreferenceId = preferenceId => {
+  return new Promise((resolve, reject) => {
+    companyUserTransactionsModel
+      .findOne({
+        where: preferenceId
+      })
+      .then(transaction => {
+        resolve(transaction.get({ plain: true }));
+      })
+      .catch(err => reject(err));
+  });
+};
+
+const updateTransactionState = (preferenceId, paymentStatus) => {
+  companyUserTransactionsModel.update(
+    { state: paymentStatus },
+    { where: { preferenceId: preferenceId } }
+  );
 };
 
 const companyUserTransactionModule = {
-  createTransaction
+  createTransaction,
+  findTransactionWithPreferenceId,
+  updateTransactionState
 };
 
 module.exports = Object.freeze(companyUserTransactionModule);
