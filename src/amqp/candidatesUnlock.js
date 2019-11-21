@@ -28,7 +28,8 @@ const msgHandler = (msg, ch) => {
 
     responseFromMercadoPago
       .then(res => {
-        companyUserTransactionModule.createTransaction(item.id, message.userId, res.body.id, 1);
+        companyUserTransactionModule.createTransaction(item.id, message.userId, res.body.id, 4);
+        logger.info("comenzo la transaccion de: "+message.userId);
         ch.sendToQueue(msg.properties.replyTo, Buffer.from(res.body.init_point.toString()), {
           correlationId: msg.properties.correlationId
         });

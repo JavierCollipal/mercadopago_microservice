@@ -9,20 +9,17 @@ const registerPostulationTransaction = (preferenceId, postulationId) => {
   const transaction = companyUserTransactionModule.findTransactionWithPreferenceId(preferenceId);
   transaction
     .then(transaction => {
-      logger.info("transaction encontrada: "+transaction);
-      logger.info("id de postulacion: "+postulationId);
-      logger.info("id de preferencia: "+postulationId);
-      logger.info("id de preferencia: "+preferenceId);
-      logger.info("va entrar a: postulationTransactionModule.createTransaction")
       postulationTransactionModule.createTransaction(postulationId, transaction.id);
     })
     .catch(onErr);
 };
 
 const finishTransactions = (preferenceId, paymentStatus, postulationId) => {
-  if (paymentStatus === 2) registerPostulationTransaction(preferenceId, postulationId);
+  logger.info("finalizando la transaccion con preferenceId : "+preferenceId);
+  if (paymentStatus === 1) registerPostulationTransaction(preferenceId, postulationId);
   postulationModule.updatePostulationState(postulationId, paymentStatus);
   companyUserTransactionModule.updateTransactionState(preferenceId, paymentStatus);
+  logger.info("finalizo la transaccion con preferenceId : "+preferenceId);
 };
 
 const manageMerchantOrder = (payment, order) => {
