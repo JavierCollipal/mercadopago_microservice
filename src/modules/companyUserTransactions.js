@@ -17,7 +17,7 @@ const findTransactionWithPreferenceId = preferenceId => {
   return new Promise((resolve, reject) => {
     companyUserTransactionsModel
       .findOne({
-        where: preferenceId
+        where: { preferenceId: preferenceId }
       })
       .then(transaction => {
         resolve(transaction.get({ plain: true }));
