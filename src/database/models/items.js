@@ -24,6 +24,9 @@ module.exports = (sequelize, DataTypes) => {
       unitPrice: {
         type: DataTypes.INTEGER,
       },
+      quantity: {
+        type: DataTypes.INTEGER,
+      },
     },
   );
 };
