@@ -15,7 +15,7 @@ const registerPostulationTransaction = (preferenceId, postulationId) => {
 };
 
 const finishTransactions = (preferenceId, paymentStatus, postulationId) => {
-  if (paymentStatus === 2) registerPostulationTransaction();
+  if (paymentStatus === 2) registerPostulationTransaction(preferenceId, postulationId);
   postulationModule.updatePostulationState(postulationId, paymentStatus);
   companyUserTransactionModule.updateTransactionState(preferenceId, paymentStatus);
 };
