@@ -5,14 +5,17 @@ const companyUserTransactionModule = require("../../modules/companyUserTransacti
 const mercadoPagoModule = require("../../modules/mercadopago");
 const postulationModule = require("../../modules/postulations");
 
-const finishTransactions = (preferenceId, paymentStatus, postulationId) => {
+const registerPostulationTransaction = (preferenceId, postulationId) => {
   const transaction = companyUserTransactionModule.findTransactionWithPreferenceId(preferenceId);
   transaction
     .then(transaction => {
       postulationTransactionModule.createTransaction(postulationId, transaction.id);
     })
     .catch(onErr);
+};
 
+const finishTransactions = (preferenceId, paymentStatus, postulationId) => {
+  if (paymentStatus === 2) registerPostulationTransaction();
   postulationModule.updatePostulationState(postulationId, paymentStatus);
   companyUserTransactionModule.updateTransactionState(preferenceId, paymentStatus);
 };

@@ -20,7 +20,9 @@ const postulationTransactionModel = postulationTransactions(sequelizeInstance, s
 /*relations*/
 
 /*companyUser transaction*/
-companyUserTransactionsModel.belongsTo(companyUserModel);
+companyUserTransactionsModel.belongsTo(companyUserModel, {
+  foreignKey: "companyUserId"
+});
 companyUserTransactionsModel.belongsTo(itemModel);
 /*item*/
 itemModel.belongsTo(itemCategoryModel, {
