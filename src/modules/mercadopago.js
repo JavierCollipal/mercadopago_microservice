@@ -3,7 +3,7 @@ const payerMaker = require("../common/mercadopago/payer");
 const itemMaker = require("../common/mercadopago/items");
 const axios = require("axios");
 const { mercadopago_sandbox_key } = require("../config/security/dotenv");
-const logger = require("../config/logger/pino");
+const { logger } = require("../config/logger/pino");
 const getMerchantOrderData = orderId => {
   return new Promise((resolve, reject) => {
     axios
