@@ -6,11 +6,12 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     transactionId: {
-      type: DataTypes.UUID
+      type: DataTypes.UUID,
+      allowNull: false
     },
     payStatus: {
       type: DataTypes.INTEGER,
       allowNull: false
-    },
+    }
   });
 };
