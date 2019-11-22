@@ -6,10 +6,12 @@ const mercadoPagoModule = require("../../modules/mercadopago");
 const postulationModule = require("../../modules/postulations");
 
 const finishTransactions = (paymentStatus, postulationId) => {
+  logger.info("esta postulationId llego a finish transactions: " + postulationId);
   const postulationTransaction = postulationTransactionModule.findByPostulationId(postulationId);
 
   postulationTransaction
     .then(transaction => {
+      logger.info("esto llego de la tabla postulationTransactions: " + transaction);
       logger.info("updateando transacciones con el nuevo estado: " + paymentStatus);
       postulationTransactionModule.updateTransactionState(transaction.id, paymentStatus);
       companyUserTransactionModule.updateTransactionState(transaction.id, paymentStatus);
