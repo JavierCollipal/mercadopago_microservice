@@ -12,11 +12,11 @@ const createTransaction = (postulationId, transactionId, payStatus) => {
     .catch(onErr);
 };
 
-const updateTransactionState = (postulationId, payStatus) => {
+const updateTransactionState = (transactionId, payStatus) => {
   postulationTransactionModel.update(
     { payStatus },
     {
-      where: { postulationId }
+      where: { transactionId }
     }
   );
 };

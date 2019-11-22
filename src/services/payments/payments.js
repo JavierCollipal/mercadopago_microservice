@@ -11,11 +11,10 @@ const finishTransactions = (paymentStatus, postulationId) => {
 
   postulationTransaction
     .then(transaction => {
-      logger.info("esto llego de la tabla postulationTransactions: " + JSON.stringify(transaction));
       logger.info("updateando transacciones con el nuevo estado: " + paymentStatus);
       postulationTransactionModule.updateTransactionState(transaction.transactionId, paymentStatus);
       companyUserTransactionModule.updateTransactionState(transaction.transactionId, paymentStatus);
-      logger.info("finalizo la transaccion con transactionId : " + transaction.id);
+      logger.info("finalizo la transaccion con transactionId : " + transaction.transactionId);
     })
     .catch(onErr);
 };
