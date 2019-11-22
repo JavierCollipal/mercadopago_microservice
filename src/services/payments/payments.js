@@ -10,8 +10,8 @@ const finishTransactions = (paymentStatus, postulationId) => {
 
   postulationTransaction
     .then(transaction => {
-      if (paymentStatus === 1)
-        postulationTransactionModule.updateTransactionState(transaction.id, paymentStatus);
+      logger.info("updateando transacciones con el nuevo estado: " + paymentStatus);
+      postulationTransactionModule.updateTransactionState(transaction.id, paymentStatus);
       companyUserTransactionModule.updateTransactionState(transaction.id, paymentStatus);
       logger.info("finalizo la transaccion con transactionId : " + transaction.id);
     })
