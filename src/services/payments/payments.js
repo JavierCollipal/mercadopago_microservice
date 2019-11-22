@@ -5,31 +5,23 @@ const companyUserTransactionModule = require("../../modules/companyUserTransacti
 const mercadoPagoModule = require("../../modules/mercadopago");
 const postulationModule = require("../../modules/postulations");
 
-const registerPostulationTransaction = (preferenceId, postulationId) => {
-  const transaction = companyUserTransactionModule.findTransactionWithPreferenceId(preferenceId);
-  transaction
+const finishTransactions = (paymentStatus, postulationId) => {
+  const postulationTransaction = postulationTransactionModule.findByPostulationId(postulationId);
+
+  postulationTransaction
     .then(transaction => {
-      postulationTransactionModule.createTransaction(postulationId, transaction.id);
+      if (paymentStatus === 1)
+        postulationTransactionModule.updateTransactionState(transaction.id, paymentStatus);
+      companyUserTransactionModule.updateTransactionState(transaction.id, paymentStatus);
+      logger.info("finalizo la transaccion con transactionId : " + transaction.id);
     })
     .catch(onErr);
 };
 
-const finishTransactions = (preferenceId, paymentStatus, postulationId) => {
-  logger.info("finalizando la transaccion con preferenceId : "+preferenceId);
-  if (paymentStatus === 1) registerPostulationTransaction(preferenceId, postulationId);
-  postulationModule.updatePostulationState(postulationId, paymentStatus);
-  companyUserTransactionModule.updateTransactionState(preferenceId, paymentStatus);
-  logger.info("finalizo la transaccion con preferenceId : "+preferenceId);
-};
-
-const manageMerchantOrder = (payment, order) => {
-  const dbStatus = mercadoPagoModule.transformMercadopagoStatus(payment.status);
-  finishTransactions(order.preference_id, dbStatus, payment.external_reference);
-};
-
 const managePaymentTransaction = payment => {
-  const merchantOrder = mercadoPagoModule.getMerchantOrderData(payment.order.id);
-  merchantOrder.then(order => manageMerchantOrder(payment, order)).catch(err => onErr(err));
+  const dbStatus = mercadoPagoModule.transformMercadopagoStatus(payment.status);
+  postulationModule.updatePostulationState(payment.external_reference, dbStatus);
+  finishTransactions(dbStatus, payment.external_reference);
 };
 
 const handlePaymentNotification = paymentId => {

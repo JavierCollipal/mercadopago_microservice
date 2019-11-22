@@ -5,6 +5,7 @@ const itemModule = require("../modules/items");
 const mercadoPagoModule = require("../modules/mercadopago");
 const companyUserTransactionModule = require("../modules/companyUserTransactions");
 const companyUserModule = require("../modules/companyUser");
+const postulationTransactionModule = require("../modules/postulationTransaction");
 
 const createPreference = (user, item, postulationId) => {
   const payer = mercadoPagoModule.createPayer(user);
@@ -28,8 +29,19 @@ const msgHandler = (msg, ch) => {
 
     responseFromMercadoPago
       .then(res => {
-        companyUserTransactionModule.createTransaction(item.id, message.userId, res.body.id, 4);
-        logger.info("comenzo la transaccion de: "+message.userId);
+        const newTransaction = companyUserTransactionModule.createTransaction(
+          item.id,
+          message.userId,
+          res.body.id,
+          4
+        );
+        newTransaction
+          .then(transaction => {
+            logger.info("transaccion de woorkit creada con id: " + transaction.id);
+            postulationTransactionModule.createTransaction(message.postulationId, transaction.id, 4);
+          })
+          .catch(onErr);
+        logger.info("comenzo la transaccion de: " + message.userId);
         ch.sendToQueue(msg.properties.replyTo, Buffer.from(res.body.init_point.toString()), {
           correlationId: msg.properties.correlationId
         });

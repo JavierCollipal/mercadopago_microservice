@@ -7,6 +7,10 @@ module.exports = (sequelize, DataTypes) => {
     },
     transactionId: {
       type: DataTypes.UUID
-    }
+    },
+    payStatus: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
   });
 };

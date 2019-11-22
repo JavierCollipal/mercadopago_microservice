@@ -1,16 +1,20 @@
 const { companyUserTransactionsModel } = require("../database/index");
-const onErr = require("../common/onErr");
 
 const createTransaction = (itemId, companyUserId, preferenceId, state) => {
-  companyUserTransactionsModel
-    .create({
-      preferenceId,
-      companyUserId,
-      itemId,
-      state
-    })
-    .then(transaction => transaction.save())
-    .catch(onErr);
+  return new Promise((resolve, reject) => {
+    companyUserTransactionsModel
+      .create({
+        preferenceId,
+        companyUserId,
+        itemId,
+        state
+      })
+      .then(transaction => {
+        transaction.save();
+        resolve(transaction.get({ plain: true }));
+      })
+      .catch(err => reject(err));
+  });
 };
 
 const findTransactionWithPreferenceId = preferenceId => {
@@ -26,11 +30,8 @@ const findTransactionWithPreferenceId = preferenceId => {
   });
 };
 
-const updateTransactionState = (preferenceId, paymentStatus) => {
-  companyUserTransactionsModel.update(
-    { state: paymentStatus },
-    { where: { preferenceId: preferenceId } }
-  );
+const updateTransactionState = (id, paymentStatus) => {
+  companyUserTransactionsModel.update({ state: paymentStatus }, { where: { id: id } });
 };
 
 const companyUserTransactionModule = {
