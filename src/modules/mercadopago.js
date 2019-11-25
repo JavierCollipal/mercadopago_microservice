@@ -75,10 +75,10 @@ const createItem = itemData => {
 const transformMercadopagoStatus = mercadopagoStatus => {
   let dbStatus = 0;
   switch (mercadopagoStatus) {
-    case "in_process":
+    case "approved":
       dbStatus = 1;
       break;
-    case "approved":
+    case "in_process":
       dbStatus = 2;
       break;
     case "rejected":

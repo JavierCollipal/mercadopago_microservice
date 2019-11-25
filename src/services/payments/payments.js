@@ -5,26 +5,24 @@ const companyUserTransactionModule = require("../../modules/companyUserTransacti
 const mercadoPagoModule = require("../../modules/mercadopago");
 const postulationModule = require("../../modules/postulations");
 
-const finishTransactions = (preferenceId, paymentStatus, postulationId) => {
-  const transaction = companyUserTransactionModule.findTransactionWithPreferenceId(preferenceId);
-  transaction
+const finishTransactions = (paymentStatus, postulationId) => {
+  logger.info("esta postulationId llego a finish transactions: " + postulationId);
+  const postulationTransaction = postulationTransactionModule.findByPostulationId(postulationId);
+
+  postulationTransaction
     .then(transaction => {
-      postulationTransactionModule.createTransaction(postulationId, transaction.id);
+      logger.info("updateando transacciones con el nuevo estado: " + paymentStatus);
+      postulationTransactionModule.updateTransactionState(transaction.transactionId, paymentStatus);
+      companyUserTransactionModule.updateTransactionState(transaction.transactionId, paymentStatus);
+      logger.info("finalizo la transaccion con transactionId : " + transaction.transactionId);
     })
     .catch(onErr);
-
-  postulationModule.updatePostulationState(postulationId, paymentStatus);
-  companyUserTransactionModule.updateTransactionState(preferenceId, paymentStatus);
-};
-
-const manageMerchantOrder = (payment, order) => {
-  const dbStatus = mercadoPagoModule.transformMercadopagoStatus(payment.status);
-  finishTransactions(order.preference_id, dbStatus, payment.external_reference);
 };
 
 const managePaymentTransaction = payment => {
-  const merchantOrder = mercadoPagoModule.getMerchantOrderData(payment.order.id);
-  merchantOrder.then(order => manageMerchantOrder(payment, order)).catch(err => onErr(err));
+  const dbStatus = mercadoPagoModule.transformMercadopagoStatus(payment.status);
+  postulationModule.updatePostulationState(payment.external_reference, dbStatus);
+  finishTransactions(dbStatus, payment.external_reference);
 };
 
 const managePaymentNotification = paymentId => {

@@ -1,4 +1,4 @@
-create TABLE woorkit.items_currency (
+create TABLE woorkit.items_currencies (
     id SERIAL,
     name varchar NOT NULL
 );
