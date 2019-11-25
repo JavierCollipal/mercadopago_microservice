@@ -18,6 +18,20 @@ const getMerchantOrderData = orderId => {
   });
 };
 
+const getChargeBackData = chargeBackId => {
+  return new Promise((resolve, reject) => {
+    axios
+      .get(
+        "https://api.mercadopago.com/v1/chargebacks/" +
+          chargeBackId +
+          "?access_token=" +
+          mercadopago_sandbox_key
+      )
+      .then(res => resolve(res.data))
+      .catch(err => reject(err));
+  });
+};
+
 const getPaymentData = paymentId => {
   return new Promise((resolve, reject) => {
     axios
@@ -75,13 +89,14 @@ const transformMercadopagoStatus = mercadopagoStatus => {
 };
 
 const mercadoPagoModule = {
+  getChargeBackData,
   transformMercadopagoStatus,
   getPaymentData,
   getMerchantOrderData,
   smartCheckoutGenerator,
   createPayer,
   defaultPreferenceMaker,
-  createItem
+  createItem,
 };
 
 module.exports = Object.freeze(mercadoPagoModule);

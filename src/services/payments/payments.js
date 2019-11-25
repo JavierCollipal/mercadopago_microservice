@@ -27,12 +27,16 @@ const managePaymentTransaction = payment => {
   merchantOrder.then(order => manageMerchantOrder(payment, order)).catch(err => onErr(err));
 };
 
-const handlePaymentNotification = paymentId => {
+const managePaymentNotification = paymentId => {
   const paymentData = mercadoPagoModule.getPaymentData(paymentId);
-  paymentData.then(payment => managePaymentTransaction(payment)).catch(err => onErr(err));
+  paymentData.then(payment => managePaymentTransaction(payment)).catch(onErr);
 };
 
-const handleChargebackNotification = chargeback => logger.info("chargebackId: " + chargeback);
+const handleChargeBackNotification = chargeBack => {
+  logger.info("chargebackId: " + chargeBack);
+  const data = mercadoPagoModule.getChargeBackData(chargeBack);
+
+};
 
 const handleMerchantOrderNotification = merchantOrder =>
   logger.info("merchantOrderId:" + merchantOrder);
@@ -40,10 +44,10 @@ const handleMerchantOrderNotification = merchantOrder =>
 const handleMercadoPagoNotification = (notificationId, notificationType) => {
   switch (notificationType) {
     case "payment":
-      handlePaymentNotification(notificationId);
+      managePaymentNotification(notificationId);
       break;
     case "chargeback":
-      handleChargebackNotification(notificationId);
+      handleChargeBackNotification(notificationId);
       break;
     case "merchant_order":
       handleMerchantOrderNotification(notificationId);
