@@ -1,4 +1,7 @@
-const { sequelizeInstance, sequelizeLibrary } = require("../config/orm/sequelize");
+const {
+  sequelizeInstance,
+  SequelizeLibrary,
+} = require('../config/orm/sequelize');
 const {
   companyUsers,
   companyUsersTransactions,
@@ -6,35 +9,43 @@ const {
   items,
   items_categories,
   items_currency,
-  posts
-} = require("./models/index");
-/*models*/
-const companyUserModel = companyUsers(sequelizeInstance, sequelizeLibrary);
-const companyUserTransactionsModel = companyUsersTransactions(sequelizeInstance, sequelizeLibrary);
+  posts,
+} = require('./models/index');
+/* models */
+const companyUserModel = companyUsers(sequelizeInstance, SequelizeLibrary);
+const companyUserTransactionsModel = companyUsersTransactions(
+  sequelizeInstance,
+  SequelizeLibrary,
+);
 
-const itemModel = items(sequelizeInstance, sequelizeLibrary);
-const itemCategoryModel = items_categories(sequelizeInstance, sequelizeLibrary);
-const itemCurrencyModel = items_currency(sequelizeInstance, sequelizeLibrary);
-const postulationModel = posts(sequelizeInstance, sequelizeLibrary);
-const postulationTransactionModel = postulationTransactions(sequelizeInstance, sequelizeLibrary);
-/*relations*/
+const itemModel = items(sequelizeInstance, SequelizeLibrary);
+const itemCategoryModel = items_categories(sequelizeInstance, SequelizeLibrary);
+const itemCurrencyModel = items_currency(sequelizeInstance, SequelizeLibrary);
+const postulationModel = posts(sequelizeInstance, SequelizeLibrary);
+const postulationTransactionModel = postulationTransactions(
+  sequelizeInstance,
+  SequelizeLibrary,
+);
+/* relations */
 
-/*companyUser transaction*/
+/* companyUser transaction */
 companyUserTransactionsModel.belongsTo(companyUserModel, {
-  foreignKey: "companyUserId"
+  foreignKey: 'companyUserId',
 });
 companyUserTransactionsModel.belongsTo(itemModel);
-/*item*/
+/* item */
 itemModel.belongsTo(itemCategoryModel, {
-  foreignKey: "categoryId"
+  foreignKey: 'categoryId',
 });
 itemModel.belongsTo(itemCurrencyModel, {
-  foreignKey: "currencyId"
+  foreignKey: 'currencyId',
 });
-/*postulation*/
-postulationTransactionModel.belongsTo(postulationModel, { foreignKey: "postulationId" });
+/* postulation */
+postulationTransactionModel.belongsTo(postulationModel, {
+  foreignKey: 'postulationId',
+});
 postulationTransactionModel.belongsTo(companyUserTransactionsModel, {
-  foreignKey: "transactionId"
+  foreignKey: 'transactionId',
 });
 
 module.exports = {
@@ -44,5 +55,5 @@ module.exports = {
   postulationTransactionModel,
   itemModel,
   itemCategoryModel,
-  itemCurrencyModel
+  itemCurrencyModel,
 };

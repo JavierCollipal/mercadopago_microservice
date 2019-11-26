@@ -1,5 +1,6 @@
-module.exports = (success, failure, pending) => Object.freeze({
+module.exports = (success, failure, pending) =>
+  Object.freeze({
     success,
     failure,
-    pending
-});
+    pending,
+  });

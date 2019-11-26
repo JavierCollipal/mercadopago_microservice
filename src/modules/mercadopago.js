@@ -1,87 +1,83 @@
-const { MercadoPago, defaultPreferenceMaker } = require("../config/mercadoPago/mercadoPago");
-const payerMaker = require("../common/mercadopago/payer");
-const itemMaker = require("../common/mercadopago/items");
-const axios = require("axios");
-const { mercadopago_sandbox_key } = require("../config/security/dotenv");
+const axios = require('axios');
+const {
+  MercadoPago,
+  defaultPreferenceMaker,
+} = require('../config/mercadoPago/mercadoPago');
+const payerMaker = require('../common/mercadopago/payer');
+const itemMaker = require('../common/mercadopago/items');
+const { mercadopago_sandbox_key } = require('../config/security/dotenv');
 
-const getMerchantOrderData = orderId => {
-  return new Promise((resolve, reject) => {
+const getMerchantOrderData = (orderId) =>
+  new Promise((resolve, reject) => {
     axios
       .get(
-        "https://api.mercadopago.com/merchant_orders/" +
-          orderId +
-          "?access_token=" +
-          mercadopago_sandbox_key
+        `https://api.mercadopago.com/merchant_orders/${orderId}?access_token=${mercadopago_sandbox_key}`,
       )
-      .then(res => resolve(res.data))
-      .catch(err => reject(err));
+      .then((res) => resolve(res.data))
+      .catch((err) => reject(err));
   });
-};
 
-const getChargeBackData = chargeBackId => {
-  return new Promise((resolve, reject) => {
+const getChargeBackData = (chargeBackId) =>
+  new Promise((resolve, reject) => {
     axios
       .get(
-        "https://api.mercadopago.com/v1/chargebacks/" +
-          chargeBackId +
-          "?access_token=" +
-          mercadopago_sandbox_key
+        `https://api.mercadopago.com/v1/chargebacks/${chargeBackId}?access_token=${mercadopago_sandbox_key}`,
       )
-      .then(res => resolve(res.data))
-      .catch(err => reject(err));
+      .then((res) => resolve(res.data))
+      .catch((err) => reject(err));
   });
-};
 
-const getPaymentData = paymentId => {
-  return new Promise((resolve, reject) => {
+const getPaymentData = (paymentId) =>
+  new Promise((resolve, reject) => {
     axios
       .get(
-        "https://api.mercadopago.com/v1/payments/" +
-          paymentId +
-          "?access_token=" +
-          mercadopago_sandbox_key
+        `https://api.mercadopago.com/v1/payments/${paymentId}?access_token=${mercadopago_sandbox_key}`,
       )
-      .then(response => resolve(response.data))
-      .catch(err => reject(err));
+      .then((response) => resolve(response.data))
+      .catch((err) => reject(err));
   });
-};
 
-const smartCheckoutGenerator = preferences => {
-  return new Promise((resolve, reject) => {
+const smartCheckoutGenerator = (preferences) =>
+  new Promise((resolve, reject) => {
     MercadoPago.preferences
       .create(preferences)
-      .then(result => resolve(result))
-      .catch(e => reject(e));
+      .then((result) => resolve(result))
+      .catch((e) => reject(e));
   });
-};
 
-const createPayer = userData => {
-  return payerMaker(userData.name, userData.lastName || "", userData.email, {}, {}, {}, null);
-};
+const createPayer = (userData) =>
+  payerMaker(
+    userData.name,
+    userData.lastName || '',
+    userData.email,
+    {},
+    {},
+    {},
+    null,
+  );
 
-const createItem = itemData => {
-  return itemMaker(
+const createItem = (itemData) =>
+  itemMaker(
     itemData.id,
     itemData.title,
     itemData.description,
-    itemData.picture_url || "",
+    itemData.picture_url || '',
     itemData.items_category.name,
     itemData.items_currency.name,
     itemData.items_currency.quantity || 1,
-    itemData.unitPrice
+    itemData.unitPrice,
   );
-};
 
-const transformMercadopagoStatus = mercadopagoStatus => {
+const transformMercadoPagoStatus = (mercadoPagoStatus) => {
   let dbStatus = 0;
-  switch (mercadopagoStatus) {
-    case "approved":
+  switch (mercadoPagoStatus) {
+    case 'approved':
       dbStatus = 1;
       break;
-    case "in_process":
+    case 'in_process':
       dbStatus = 2;
       break;
-    case "rejected":
+    case 'rejected':
       dbStatus = 3;
       break;
   }
@@ -90,7 +86,7 @@ const transformMercadopagoStatus = mercadopagoStatus => {
 
 const mercadoPagoModule = {
   getChargeBackData,
-  transformMercadopagoStatus,
+  transformMercadoPagoStatus,
   getPaymentData,
   getMerchantOrderData,
   smartCheckoutGenerator,

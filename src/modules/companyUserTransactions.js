@@ -1,43 +1,44 @@
-const { companyUserTransactionsModel } = require("../database/index");
+const { companyUserTransactionsModel } = require('../database/index');
 
-const createTransaction = (itemId, companyUserId, preferenceId, state) => {
-  return new Promise((resolve, reject) => {
+const createTransaction = (itemId, companyUserId, preferenceId, state) =>
+  new Promise((resolve, reject) => {
     companyUserTransactionsModel
       .create({
         preferenceId,
         companyUserId,
         itemId,
-        state
+        state,
       })
-      .then(transaction => {
+      .then((transaction) => {
         transaction.save();
         resolve(transaction.get({ plain: true }));
       })
-      .catch(err => reject(err));
+      .catch((err) => reject(err));
   });
-};
 
-const findTransactionWithPreferenceId = preferenceId => {
-  return new Promise((resolve, reject) => {
+const findTransactionWithPreferenceId = (preferenceId) =>
+  new Promise((resolve, reject) => {
     companyUserTransactionsModel
       .findOne({
-        where: { preferenceId: preferenceId }
+        where: { preferenceId },
       })
-      .then(transaction => {
+      .then((transaction) => {
         resolve(transaction.get({ plain: true }));
       })
-      .catch(err => reject(err));
+      .catch((err) => reject(err));
   });
-};
 
 const updateTransactionState = (id, paymentStatus) => {
-  companyUserTransactionsModel.update({ state: paymentStatus }, { where: { id: id } });
+  companyUserTransactionsModel.update(
+    { state: paymentStatus },
+    { where: { id } },
+  );
 };
 
 const companyUserTransactionModule = {
   createTransaction,
   findTransactionWithPreferenceId,
-  updateTransactionState
+  updateTransactionState,
 };
 
 module.exports = Object.freeze(companyUserTransactionModule);

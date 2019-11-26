@@ -1,17 +1,16 @@
-module.exports = (sequelize, DataTypes) => {
-  return sequelize.define("postulation_transactions", {
+module.exports = (sequelize, DataTypes) =>
+  sequelize.define('postulation_transactions', {
     postulationId: {
       type: DataTypes.INTEGER,
       primaryKey: true,
-      allowNull: false
+      allowNull: false,
     },
     transactionId: {
       type: DataTypes.UUID,
-      allowNull: false
+      allowNull: false,
     },
     payStatus: {
       type: DataTypes.INTEGER,
-      allowNull: false
-    }
+      allowNull: false,
+    },
   });
-};

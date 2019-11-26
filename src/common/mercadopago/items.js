@@ -1,4 +1,4 @@
-//if your items design is different than a mercadopago item, you should use this function together with map.
+/* if your items design is different than a mercadopago item, you should use this function together with map. */
 module.exports = (
   id,
   title,
@@ -7,7 +7,7 @@ module.exports = (
   category_id,
   currency_id,
   quantity,
-  unit_price
+  unit_price,
 ) =>
   Object.freeze({
     id,
@@ -17,5 +17,5 @@ module.exports = (
     category_id,
     quantity,
     currency_id,
-    unit_price
+    unit_price,
   });

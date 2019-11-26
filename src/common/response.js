@@ -1,8 +1,10 @@
-const dataResponse = (data) => Object.freeze({
+const dataResponse = (data) =>
+  Object.freeze({
     data,
   });
 
-const errorResponse = (error) => Object.freeze({
+const errorResponse = (error) =>
+  Object.freeze({
     error,
   });
 
