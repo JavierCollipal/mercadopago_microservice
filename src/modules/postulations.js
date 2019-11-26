@@ -1,16 +1,21 @@
 const { postulationModel } = require('../database/index');
-const { logger } = require('../config/logger/pino');
 
-const updatePostulationState = (postulationId, paymentStatus) => {
-  logger.info(`nuevo estado del pago en la postulacion: ${paymentStatus}`);
+function updatePostulationState(postulationId, paymentStatus) {
   postulationModel.update(
     { payStatus: paymentStatus },
     { where: { id: postulationId } },
   );
-};
+}
+function updateMultiplePostulationStates(postulationIds, paymentStatus) {
+  postulationModel.update(
+    { payStatus: paymentStatus },
+    { where: { [Op.in]: postulationIds } },
+  );
+}
 
 const postulationModule = {
   updatePostulationState,
+  updateMultiplePostulationStates,
 };
 
 module.exports = Object.freeze(postulationModule);

@@ -1,7 +1,7 @@
 const { companyUserTransactionsModel } = require('../database/index');
 
-const createTransaction = (itemId, companyUserId, preferenceId, state) =>
-  new Promise((resolve, reject) => {
+function createTransaction(itemId, companyUserId, preferenceId, state) {
+  return new Promise((resolve, reject) => {
     companyUserTransactionsModel
       .create({
         preferenceId,
@@ -15,9 +15,10 @@ const createTransaction = (itemId, companyUserId, preferenceId, state) =>
       })
       .catch((err) => reject(err));
   });
+}
 
-const findTransactionWithPreferenceId = (preferenceId) =>
-  new Promise((resolve, reject) => {
+function findTransactionWithPreferenceId(preferenceId) {
+  return new Promise((resolve, reject) => {
     companyUserTransactionsModel
       .findOne({
         where: { preferenceId },
@@ -27,13 +28,14 @@ const findTransactionWithPreferenceId = (preferenceId) =>
       })
       .catch((err) => reject(err));
   });
+}
 
-const updateTransactionState = (id, paymentStatus) => {
+function updateTransactionState(id, paymentStatus) {
   companyUserTransactionsModel.update(
     { state: paymentStatus },
     { where: { id } },
   );
-};
+}
 
 const companyUserTransactionModule = {
   createTransaction,

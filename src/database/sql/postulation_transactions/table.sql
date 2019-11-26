@@ -1,8 +1,10 @@
 CREATE TABLE woorkit.postulation_transactions (
 	postulationid int4 NULL,
-	transactionid uuid NULL
-);
+	transactionid uuid NULL,
+	paymentid uuid NULL,
 
+);
+ALTER TABLE woorkit.postulation_transactions RENAME COLUMN paymentid TO "paymentId";
 ALTER TABLE woorkit.postulation_transactions RENAME COLUMN postulationid TO "postulationId";
 ALTER TABLE woorkit.postulation_transactions RENAME COLUMN transactionid TO "transactionId";
 ALTER TABLE woorkit.postulation_transactions ADD CONSTRAINT postulation_transactions_pk PRIMARY KEY ("transactionId","postulationId");

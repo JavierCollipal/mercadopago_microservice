@@ -13,4 +13,7 @@ module.exports = (sequelize, DataTypes) =>
       type: DataTypes.INTEGER,
       allowNull: false,
     },
+    paymentId: {
+      type: DataTypes.UUID,
+    },
   });

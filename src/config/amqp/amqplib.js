@@ -1,5 +1,5 @@
 const onErr = require('../../common/onErr');
-const { logger } = require('../logger/pino');
+const logger = require('../logger/pino');
 const {
   rabbit_username,
   rabbit_password,

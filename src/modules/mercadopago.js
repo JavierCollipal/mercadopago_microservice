@@ -7,8 +7,8 @@ const payerMaker = require('../common/mercadopago/payer');
 const itemMaker = require('../common/mercadopago/items');
 const { mercadopago_sandbox_key } = require('../config/security/dotenv');
 
-const getMerchantOrderData = (orderId) =>
-  new Promise((resolve, reject) => {
+function getMerchantOrderData(orderId) {
+  return new Promise((resolve, reject) => {
     axios
       .get(
         `https://api.mercadopago.com/merchant_orders/${orderId}?access_token=${mercadopago_sandbox_key}`,
@@ -16,9 +16,10 @@ const getMerchantOrderData = (orderId) =>
       .then((res) => resolve(res.data))
       .catch((err) => reject(err));
   });
+}
 
-const getChargeBackData = (chargeBackId) =>
-  new Promise((resolve, reject) => {
+function getChargeBackData(chargeBackId) {
+  return new Promise((resolve, reject) => {
     axios
       .get(
         `https://api.mercadopago.com/v1/chargebacks/${chargeBackId}?access_token=${mercadopago_sandbox_key}`,
@@ -26,9 +27,10 @@ const getChargeBackData = (chargeBackId) =>
       .then((res) => resolve(res.data))
       .catch((err) => reject(err));
   });
+}
 
-const getPaymentData = (paymentId) =>
-  new Promise((resolve, reject) => {
+function getPaymentData(paymentId) {
+  return new Promise((resolve, reject) => {
     axios
       .get(
         `https://api.mercadopago.com/v1/payments/${paymentId}?access_token=${mercadopago_sandbox_key}`,
@@ -36,16 +38,18 @@ const getPaymentData = (paymentId) =>
       .then((response) => resolve(response.data))
       .catch((err) => reject(err));
   });
+}
 
-const smartCheckoutGenerator = (preferences) =>
-  new Promise((resolve, reject) => {
+function smartCheckoutGenerator(preferences) {
+  return new Promise((resolve, reject) => {
     MercadoPago.preferences
       .create(preferences)
       .then((result) => resolve(result))
       .catch((e) => reject(e));
   });
+}
 
-const createPayer = (userData) =>
+function createPayer(userData) {
   payerMaker(
     userData.name,
     userData.lastName || '',
@@ -55,8 +59,9 @@ const createPayer = (userData) =>
     {},
     null,
   );
+}
 
-const createItem = (itemData) =>
+function createItem(itemData) {
   itemMaker(
     itemData.id,
     itemData.title,
@@ -67,6 +72,7 @@ const createItem = (itemData) =>
     itemData.items_currency.quantity || 1,
     itemData.unitPrice,
   );
+}
 
 const transformMercadoPagoStatus = (mercadoPagoStatus) => {
   let dbStatus = 0;

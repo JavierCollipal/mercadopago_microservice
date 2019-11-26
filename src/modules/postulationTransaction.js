@@ -1,7 +1,7 @@
 const { postulationTransactionModel } = require('../database/index');
 const onErr = require('../common/onErr');
 
-const createTransaction = (postulationId, transactionId, payStatus) => {
+function createTransaction(postulationId, transactionId, payStatus) {
   postulationTransactionModel
     .create({
       postulationId,
@@ -10,29 +10,48 @@ const createTransaction = (postulationId, transactionId, payStatus) => {
     })
     .then((transaction) => transaction.save())
     .catch(onErr);
-};
+}
 
-const updateTransactionState = (transactionId, payStatus) => {
+function updateTransactionState(transactionId, payStatus) {
   postulationTransactionModel.update(
     { payStatus },
     {
       where: { transactionId },
     },
   );
-};
+}
 
-const findByPostulationId = (postulationId) =>
+function findByPostulationId(postulationId) {
   postulationTransactionModel
     .findOne({
       where: { postulationId },
     })
     .then((transaction) => transaction.get({ plain: true }))
     .catch((err) => err);
+}
+
+function filterPostulationIds(postulationTransactions) {
+  return postulationTransactions.filter(
+    (postulation) => postulation.postulationId,
+  );
+}
+
+function findByMultiplePaymentIds(paymentIds) {
+  postulationTransactionModel
+    .findAll({
+      // eslint-disable-next-line no-undef
+      where: { [Op.in]: paymentIds },
+    })
+    .then((transaction) => transaction.get({ plain: true }))
+    .catch((err) => err);
+}
 
 const postulationTransactionModule = {
   createTransaction,
   findByPostulationId,
   updateTransactionState,
+  findByMultiplePaymentIds,
+  filterPostulationIds,
 };
 
 module.exports = Object.freeze(postulationTransactionModule);

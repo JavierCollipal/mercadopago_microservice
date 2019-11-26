@@ -1,4 +1,4 @@
-const { paymentService } = require('../services/index');
+const paymentService = require('../services/payments');
 
 const paymentController = {
   handleMercadoPagoNotification(req, res) {

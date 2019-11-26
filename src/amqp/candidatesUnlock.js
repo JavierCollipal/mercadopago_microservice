@@ -1,5 +1,5 @@
 const onErr = require('../common/onErr');
-const { logger } = require('../config/logger/pino');
+const logger = require('../config/logger/pino');
 const { createChannel } = require('../config/amqp/amqplib');
 const itemModule = require('../modules/items');
 const mercadoPagoModule = require('../modules/mercadopago');
@@ -53,7 +53,7 @@ const msgHandler = (msg, ch) => {
             );
           })
           .catch(onErr);
-        logger.info(`comenzo la transaccion de: ${message.userId}`);
+
         ch.sendToQueue(
           msg.properties.replyTo,
           Buffer.from(res.body.init_point.toString()),
@@ -67,7 +67,7 @@ const msgHandler = (msg, ch) => {
   });
 };
 
-const candidatesUnlockChannel = () => {
+function candidatesUnlockChannel() {
   const channel = createChannel();
   channel.then((ch) => {
     ch.assertQueue('candidates_unlock_rpc', { durable: false }).then((q) => {
@@ -76,8 +76,8 @@ const candidatesUnlockChannel = () => {
       ch.consume(q.queue, (msg) => msgHandler(msg, ch));
     });
   });
-};
+}
 
-module.exports = {
+module.exports = Object.freeze({
   candidatesUnlockChannel,
-};
+});
