@@ -1,5 +1,4 @@
-// if your user design is different than a mercadopago payer, you should use this function together with map.
-module.exports = (
+const payer = (
   name,
   surname,
   email,
@@ -17,3 +16,4 @@ module.exports = (
     address,
     date_created,
   });
+module.exports = payer;

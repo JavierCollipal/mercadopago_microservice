@@ -3,12 +3,12 @@ const {
   MercadoPago,
   defaultPreferenceMaker,
 } = require('../config/mercadoPago/mercadoPago');
-const payerMaker = require('../common/mercadopago/payer');
-const itemMaker = require('../common/mercadopago/items');
+const payerMaker = require('../utils/mercadopago/payer');
+const itemMaker = require('../utils/mercadopago/items');
 const { mercadopago_sandbox_key } = require('../config/security/dotenv');
 
-function getMerchantOrderData(orderId) {
-  return new Promise((resolve, reject) => {
+const getMerchantOrderData = (orderId) =>
+  new Promise((resolve, reject) => {
     axios
       .get(
         `https://api.mercadopago.com/merchant_orders/${orderId}?access_token=${mercadopago_sandbox_key}`,
@@ -16,10 +16,9 @@ function getMerchantOrderData(orderId) {
       .then((res) => resolve(res.data))
       .catch((err) => reject(err));
   });
-}
 
-function getChargeBackData(chargeBackId) {
-  return new Promise((resolve, reject) => {
+const getChargeBackData = (chargeBackId) =>
+  new Promise((resolve, reject) => {
     axios
       .get(
         `https://api.mercadopago.com/v1/chargebacks/${chargeBackId}?access_token=${mercadopago_sandbox_key}`,
@@ -27,10 +26,9 @@ function getChargeBackData(chargeBackId) {
       .then((res) => resolve(res.data))
       .catch((err) => reject(err));
   });
-}
 
-function getPaymentData(paymentId) {
-  return new Promise((resolve, reject) => {
+const getPaymentData = (paymentId) =>
+  new Promise((resolve, reject) => {
     axios
       .get(
         `https://api.mercadopago.com/v1/payments/${paymentId}?access_token=${mercadopago_sandbox_key}`,
@@ -38,18 +36,16 @@ function getPaymentData(paymentId) {
       .then((response) => resolve(response.data))
       .catch((err) => reject(err));
   });
-}
 
-function smartCheckoutGenerator(preferences) {
-  return new Promise((resolve, reject) => {
+const smartCheckoutGenerator = (preferences) =>
+  new Promise((resolve, reject) => {
     MercadoPago.preferences
       .create(preferences)
       .then((result) => resolve(result))
       .catch((e) => reject(e));
   });
-}
 
-function createPayer(userData) {
+const createPayer = (userData) => {
   payerMaker(
     userData.name,
     userData.lastName || '',
@@ -59,9 +55,9 @@ function createPayer(userData) {
     {},
     null,
   );
-}
+};
 
-function createItem(itemData) {
+const createItem = (itemData) => {
   itemMaker(
     itemData.id,
     itemData.title,
@@ -72,7 +68,7 @@ function createItem(itemData) {
     itemData.items_currency.quantity || 1,
     itemData.unitPrice,
   );
-}
+};
 
 const transformMercadoPagoStatus = (mercadoPagoStatus) => {
   let dbStatus = 0;
@@ -85,6 +81,8 @@ const transformMercadoPagoStatus = (mercadoPagoStatus) => {
       break;
     case 'rejected':
       dbStatus = 3;
+      break;
+    default:
       break;
   }
   return dbStatus;

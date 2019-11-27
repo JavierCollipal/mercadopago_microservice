@@ -36,6 +36,7 @@
     "eslint-plugin-node": "^10.0.0",
     "nodemon": "^1.19.4",
     "pino-pretty": "^3.4.0",
-    "prettier": "^1.19.1"
+    "prettier": "^1.19.1",
+    "sequelize-cli": "^5.5.1"
   }
 }

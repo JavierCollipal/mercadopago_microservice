@@ -1,17 +1,18 @@
-const { postulationModel } = require('../database/index');
+const { postulationModel } = require('../database/core');
 
-function updatePostulationState(postulationId, paymentStatus) {
+const updatePostulationState = (postulationId, paymentStatus) => {
   postulationModel.update(
     { payStatus: paymentStatus },
     { where: { id: postulationId } },
   );
-}
-function updateMultiplePostulationStates(postulationIds, paymentStatus) {
+};
+
+const updateMultiplePostulationStates = (postulationIds, paymentStatus) => {
   postulationModel.update(
     { payStatus: paymentStatus },
     { where: { [Op.in]: postulationIds } },
   );
-}
+};
 
 const postulationModule = {
   updatePostulationState,

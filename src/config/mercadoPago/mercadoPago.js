@@ -6,7 +6,7 @@ const {
   mercadopago_pending_url,
   mercadopago_notification_url,
 } = require('../security/dotenv');
-const backUrlMaker = require('../../common/mercadopago/backUrl');
+const backUrlMaker = require('../../utils/mercadopago/backUrl');
 /* remember to change this when you get the mercadoPago production key */
 MercadoPago.configure({
   sandbox: true,

@@ -1,5 +1,5 @@
 const logger = require('../config/logger/pino');
-const onErr = require('../common/onErr');
+const onErr = require('../utils/onErr');
 const postulationTransactionModule = require('../modules/postulationTransaction');
 const companyUserTransactionModule = require('../modules/companyUserTransactions');
 const mercadoPagoModule = require('../modules/mercadopago');
@@ -56,6 +56,7 @@ const handleChargeBackNotification = (chargeBackId) => {
 const handleMerchantOrderNotification = () => {};
 
 function handleMercadoPagoNotification(notificationId, notificationType) {
+  console.log(notificationId, notificationType);
   switch (notificationType) {
     case 'payment':
       managePaymentNotification(notificationId);
@@ -65,6 +66,8 @@ function handleMercadoPagoNotification(notificationId, notificationType) {
       break;
     case 'merchant_order':
       handleMerchantOrderNotification();
+      break;
+    default:
       break;
   }
 }

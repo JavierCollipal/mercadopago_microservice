@@ -1,6 +1,6 @@
-const onErr = require('../common/onErr');
+const onErr = require('../utils/onErr');
 const logger = require('../config/logger/pino');
-const { createChannel } = require('../config/amqp/amqplib');
+const createChannel = require('../config/amqp/amqplib');
 const itemModule = require('../modules/items');
 const mercadoPagoModule = require('../modules/mercadopago');
 const companyUserTransactionModule = require('../modules/companyUserTransactions');
@@ -67,7 +67,7 @@ const msgHandler = (msg, ch) => {
   });
 };
 
-function candidatesUnlockChannel() {
+const candidatesUnlockChannel = () => {
   const channel = createChannel();
   channel.then((ch) => {
     ch.assertQueue('candidates_unlock_rpc', { durable: false }).then((q) => {
@@ -76,8 +76,8 @@ function candidatesUnlockChannel() {
       ch.consume(q.queue, (msg) => msgHandler(msg, ch));
     });
   });
-}
+};
 
-module.exports = Object.freeze({
-  candidatesUnlockChannel,
-});
+const candidatesUnlockModule = { candidatesUnlockChannel };
+
+module.exports = Object.freeze(candidatesUnlockModule);

@@ -1,7 +1,7 @@
-const { postulationTransactionModel } = require('../database/index');
-const onErr = require('../common/onErr');
+const { postulationTransactionModel } = require('../database/core');
+const onErr = require('../utils/onErr');
 
-function createTransaction(postulationId, transactionId, payStatus) {
+const createTransaction = (postulationId, transactionId, payStatus) => {
   postulationTransactionModel
     .create({
       postulationId,
@@ -10,33 +10,30 @@ function createTransaction(postulationId, transactionId, payStatus) {
     })
     .then((transaction) => transaction.save())
     .catch(onErr);
-}
+};
 
-function updateTransactionState(transactionId, payStatus) {
+const updateTransactionState = (transactionId, payStatus) => {
   postulationTransactionModel.update(
     { payStatus },
     {
       where: { transactionId },
     },
   );
-}
+};
 
-function findByPostulationId(postulationId) {
+const findByPostulationId = (postulationId) => {
   postulationTransactionModel
     .findOne({
       where: { postulationId },
     })
     .then((transaction) => transaction.get({ plain: true }))
     .catch((err) => err);
-}
+};
 
-function filterPostulationIds(postulationTransactions) {
-  return postulationTransactions.filter(
-    (postulation) => postulation.postulationId,
-  );
-}
+const filterPostulationIds = (postulationTransactions) =>
+  postulationTransactions.filter((postulation) => postulation.postulationId);
 
-function findByMultiplePaymentIds(paymentIds) {
+const findByMultiplePaymentIds = (paymentIds) => {
   postulationTransactionModel
     .findAll({
       // eslint-disable-next-line no-undef
@@ -44,7 +41,7 @@ function findByMultiplePaymentIds(paymentIds) {
     })
     .then((transaction) => transaction.get({ plain: true }))
     .catch((err) => err);
-}
+};
 
 const postulationTransactionModule = {
   createTransaction,

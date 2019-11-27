@@ -1,4 +1,4 @@
-const { companyUserModel } = require('../database/index');
+const { companyUserModel } = require('../database/core');
 
 const getUserData = (userId) =>
   new Promise((resolve, reject) => {

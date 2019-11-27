@@ -1,4 +1,4 @@
-const { companyUserTransactionsModel } = require('../database/index');
+const { companyUserTransactionsModel } = require('../database/core');
 
 function createTransaction(itemId, companyUserId, preferenceId, state) {
   return new Promise((resolve, reject) => {

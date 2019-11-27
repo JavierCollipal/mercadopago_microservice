@@ -1,4 +1,5 @@
-const onErr = require('../../common/onErr');
+const amqplib = require('amqplib');
+const onErr = require('../../utils/onErr');
 const logger = require('../logger/pino');
 const {
   rabbit_username,
@@ -17,10 +18,9 @@ const connectionParams = {
 // We make the connection only one time
 // Remember to never close the rabbit connection in prod.
 logger.info('Connecting to woorkit-rabbitQM with Ampqlib');
-const open = require('amqplib')
-  .connect(connectionParams)
-  .catch(onErr);
+const open = amqplib.connect(connectionParams).catch(onErr);
 
 const createChannel = () => open.then((conn) => conn.createChannel());
 logger.info('Ampq connected');
-module.exports = { createChannel };
+
+module.exports = createChannel;

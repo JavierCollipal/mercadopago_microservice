@@ -1,5 +1,4 @@
-/* if your items design is different than a mercadopago item, you should use this function together with map. */
-module.exports = (
+const items = (
   id,
   title,
   description,
@@ -19,3 +18,4 @@ module.exports = (
     currency_id,
     unit_price,
   });
+module.exports = items;

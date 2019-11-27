@@ -2,7 +2,7 @@ const {
   itemModel,
   itemCategoryModel,
   itemCurrencyModel,
-} = require('../database/index');
+} = require('../database/core');
 
 const findOneById = (itemId) =>
   new Promise((resolve, reject) => {
