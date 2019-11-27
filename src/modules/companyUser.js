@@ -1,16 +1,15 @@
-const { companyUserModel } = require("../database/index");
+const { companyUserModel } = require('../database/core');
 
-const getUserData = userId => {
-  return new Promise((resolve, reject) => {
+const getUserData = (userId) =>
+  new Promise((resolve, reject) => {
     companyUserModel
       .findByPk(userId)
-      .then(user => resolve(user.get({ plain: true })))
-      .catch(err => reject(err));
+      .then((user) => resolve(user.get({ plain: true })))
+      .catch((err) => reject(err));
   });
-};
 
 const companyUserModule = {
-  getUserData
+  getUserData,
 };
 
 module.exports = Object.freeze(companyUserModule);

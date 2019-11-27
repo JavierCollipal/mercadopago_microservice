@@ -1,42 +1,46 @@
-const { companyUserTransactionsModel } = require("../database/index");
-const onErr = require("../common/onErr");
+const { companyUserTransactionsModel } = require('../database/core');
 
-const createTransaction = (itemId, companyUserId, preferenceId, state) => {
-  companyUserTransactionsModel
-    .create({
-      preferenceId,
-      companyUserId,
-      itemId,
-      state
-    })
-    .then(transaction => transaction.save())
-    .catch(onErr);
-};
+function createTransaction(itemId, companyUserId, preferenceId, state) {
+  return new Promise((resolve, reject) => {
+    companyUserTransactionsModel
+      .create({
+        preferenceId,
+        companyUserId,
+        itemId,
+        state,
+      })
+      .then((transaction) => {
+        transaction.save();
+        resolve(transaction.get({ plain: true }));
+      })
+      .catch((err) => reject(err));
+  });
+}
 
-const findTransactionWithPreferenceId = preferenceId => {
+function findTransactionWithPreferenceId(preferenceId) {
   return new Promise((resolve, reject) => {
     companyUserTransactionsModel
       .findOne({
-        where: preferenceId
+        where: { preferenceId },
       })
-      .then(transaction => {
+      .then((transaction) => {
         resolve(transaction.get({ plain: true }));
       })
-      .catch(err => reject(err));
+      .catch((err) => reject(err));
   });
-};
+}
 
-const updateTransactionState = (preferenceId, paymentStatus) => {
+function updateTransactionState(id, paymentStatus) {
   companyUserTransactionsModel.update(
     { state: paymentStatus },
-    { where: { preferenceId: preferenceId } }
+    { where: { id } },
   );
-};
+}
 
 const companyUserTransactionModule = {
   createTransaction,
   findTransactionWithPreferenceId,
-  updateTransactionState
+  updateTransactionState,
 };
 
 module.exports = Object.freeze(companyUserTransactionModule);

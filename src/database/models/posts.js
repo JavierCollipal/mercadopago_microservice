@@ -1,7 +1,6 @@
-module.exports = (sequelize, DataTypes) => {
-
-  return sequelize.define(
-    "posts",
+module.exports = (sequelize, DataTypes) =>
+  sequelize.define(
+    'posts',
     {
       id: {
         primaryKey: true,
@@ -19,4 +18,3 @@ module.exports = (sequelize, DataTypes) => {
       updatedAt: false,
     },
   );
-};

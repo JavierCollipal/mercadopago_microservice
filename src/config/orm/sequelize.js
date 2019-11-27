@@ -1,5 +1,5 @@
-const sequelizeLibrary = require("sequelize");
-const { logger } = require("../logger/pino");
+const SequelizeLibrary = require('sequelize');
+const logger = require('../logger/pino');
 const {
   database,
   database_host,
@@ -7,28 +7,28 @@ const {
   database_port,
   database_username,
   database_schema,
-  sequelize_dialect
-} = require("../security/dotenv");
+  sequelize_dialect,
+} = require('../security/dotenv');
 
 const sequelizeConfig = {
   host: database_host,
   dialect: sequelize_dialect,
   port: database_port,
   schema: database_schema,
-  logging: logger.debug
+  logging: logger.debug,
 };
 
-logger.info("Connecting to woorkit DB with Sequelize");
-
-const sequelizeInstance = new sequelizeLibrary(
+logger.info('Connecting to woorkit DB with Sequelize');
+const sequelizeInstance = new SequelizeLibrary(
   database,
   database_username,
   database_password,
-  sequelizeConfig
+  sequelizeConfig,
 );
-
-logger.info("Connection sucefull to woorkit DB with Sequelize");
+logger.info(database);
+logger.info(JSON.stringify(sequelizeConfig));
+logger.info('Connection succesful to woorkit DB with Sequelize');
 module.exports = {
   sequelizeInstance,
-  sequelizeLibrary
+  SequelizeLibrary,
 };
