@@ -42,21 +42,27 @@ const managePaymentNotification = (paymentId) => {
 };
 
 const handleChargeBackNotification = (chargeBackId) => {
-  logger.info(`chargebackId: ${chargeBackId}`);
   const chargeBack = mercadoPagoModule.getChargeBackData(chargeBackId);
-  const postulationTransactions = postulationTransactionModule.findByMultiplePaymentIds(
-    chargeBack.payments,
-  );
-  const postulationIds = postulationTransactionModule.filterPostulationIds(
-    postulationTransactions,
-  );
-  postulationModule.updateMultiplePostulationStates(postulationIds);
+  chargeBack
+    .then((chargeback) => {
+      const postulationTransactions = postulationTransactionModule.findByMultiplePaymentIds(
+        chargeback.payments,
+      );
+      postulationTransactions
+        .then((transactions) => {
+          const postulationIds = postulationTransactionModule.filterPostulationIds(
+            transactions,
+          );
+          postulationModule.updateMultiplePostulationStates(postulationIds, 0);
+        })
+        .catch(onErr);
+    })
+    .catch(onErr);
 };
 
 const handleMerchantOrderNotification = () => {};
 
 function handleMercadoPagoNotification(notificationId, notificationType) {
-  console.log(notificationId, notificationType);
   switch (notificationType) {
     case 'payment':
       managePaymentNotification(notificationId);

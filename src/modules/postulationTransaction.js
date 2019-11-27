@@ -1,5 +1,6 @@
 const { postulationTransactionModel } = require('../database/core');
 const onErr = require('../utils/onErr');
+const Op = require('../utils/sequelize/op');
 
 const createTransaction = (postulationId, transactionId, payStatus) => {
   postulationTransactionModel
@@ -31,17 +32,20 @@ const findByPostulationId = (postulationId) => {
 };
 
 const filterPostulationIds = (postulationTransactions) =>
-  postulationTransactions.filter((postulation) => postulation.postulationId);
+  postulationTransactions.map((postulation) => postulation.postulationId);
 
-const findByMultiplePaymentIds = (paymentIds) => {
-  postulationTransactionModel
-    .findAll({
-      // eslint-disable-next-line no-undef
-      where: { [Op.in]: paymentIds },
-    })
-    .then((transaction) => transaction.get({ plain: true }))
-    .catch((err) => err);
-};
+const findByMultiplePaymentIds = (paymentIds) =>
+  new Promise((resolve, reject) => {
+    postulationTransactionModel
+      .findAll(
+        { raw: true },
+        {
+          where: { paymentId: { [Op.in]: paymentIds } },
+        },
+      )
+      .then((transactions) => resolve(transactions))
+      .catch((err) => reject(err));
+  });
 
 const postulationTransactionModule = {
   createTransaction,

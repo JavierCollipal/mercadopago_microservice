@@ -12,5 +12,8 @@ ALTER TABLE woorkit.postulation_transactions ADD CONSTRAINT postulation_transact
 ALTER TABLE woorkit.postulation_transactions ADD CONSTRAINT postulation_transactions_fk_1 FOREIGN KEY ("postulationId") REFERENCES woorkit.posts(id);
 ALTER TABLE woorkit.postulation_transactions ADD paystatus int4 NOT NULL;
 ALTER TABLE woorkit.postulation_transactions RENAME COLUMN paystatus TO "payStatus";
+ALTER TABLE woorkit.postulation_transactions RENAME COLUMN "paymentId" TO "mercadopagoPayment";
+ALTER TABLE woorkit.postulation_transactions RENAME COLUMN "mercadopagoPayment" TO "mercadoPagoPayment";
+
 
 

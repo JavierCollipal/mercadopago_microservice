@@ -19,14 +19,14 @@ const sequelizeConfig = {
 };
 
 logger.info('Connecting to woorkit DB with Sequelize');
-
 const sequelizeInstance = new SequelizeLibrary(
   database,
   database_username,
   database_password,
   sequelizeConfig,
 );
-
+logger.info(database);
+logger.info(JSON.stringify(sequelizeConfig));
 logger.info('Connection succesful to woorkit DB with Sequelize');
 module.exports = {
   sequelizeInstance,

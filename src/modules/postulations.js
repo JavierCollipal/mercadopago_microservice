@@ -1,4 +1,5 @@
 const { postulationModel } = require('../database/core');
+const Op = require('../utils/sequelize/op');
 
 const updatePostulationState = (postulationId, paymentStatus) => {
   postulationModel.update(
@@ -10,7 +11,7 @@ const updatePostulationState = (postulationId, paymentStatus) => {
 const updateMultiplePostulationStates = (postulationIds, paymentStatus) => {
   postulationModel.update(
     { payStatus: paymentStatus },
-    { where: { [Op.in]: postulationIds } },
+    { where: { id: { [Op.in]: postulationIds } } },
   );
 };
 
