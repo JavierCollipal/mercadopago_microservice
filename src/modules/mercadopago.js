@@ -57,7 +57,7 @@ const createPayer = (userData) => {
   );
 };
 
-const createItem = (itemData) => {
+const createItem = (itemData) =>
   itemMaker(
     itemData.id,
     itemData.title,
@@ -68,6 +68,14 @@ const createItem = (itemData) => {
     itemData.items_currency.quantity || 1,
     itemData.unitPrice,
   );
+
+const createPreference = (user, item, postulationId) => {
+  const payer = createPayer(user);
+  const formattedItem = createItem(item);
+  const items = [];
+  items.push(formattedItem);
+
+  return defaultPreferenceMaker(items, payer, postulationId.toString());
 };
 
 const transformMercadoPagoStatus = (mercadoPagoStatus) => {
@@ -89,6 +97,7 @@ const transformMercadoPagoStatus = (mercadoPagoStatus) => {
 };
 
 const mercadoPagoModule = {
+  createPreference,
   getChargeBackData,
   transformMercadoPagoStatus,
   getPaymentData,
