@@ -62,7 +62,7 @@ const handleChargeBackNotification = (chargeBackId) => {
 
 const handleMerchantOrderNotification = () => {};
 
-function handleMercadoPagoNotification(notificationId, notificationType) {
+const handleMercadoPagoNotification = (notificationId, notificationType) => {
   switch (notificationType) {
     case 'payment':
       managePaymentNotification(notificationId);
@@ -76,7 +76,7 @@ function handleMercadoPagoNotification(notificationId, notificationType) {
     default:
       break;
   }
-}
+};
 
 const paymentService = { handleMercadoPagoNotification };
 module.exports = Object.freeze(paymentService);

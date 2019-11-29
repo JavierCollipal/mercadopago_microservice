@@ -7,28 +7,18 @@ const companyUserTransactionModule = require('../modules/companyUserTransactions
 const companyUserModule = require('../modules/companyUser');
 const postulationTransactionModule = require('../modules/postulationTransaction');
 
-const createPreference = (user, item, postulationId) => {
-  const payer = mercadoPagoModule.createPayer(user);
-  const formattedItem = mercadoPagoModule.createItem(item);
-  const items = [];
-  items.push(formattedItem);
-
-  return mercadoPagoModule.defaultPreferenceMaker(
-    items,
-    payer,
-    postulationId.toString(),
-  );
-};
-
 const msgHandler = (msg, ch) => {
   const message = JSON.parse(msg.content.toString());
   const userData = companyUserModule.getUserData(message.userId);
   const itemData = itemModule.findOneById(message.items[0]);
-
   Promise.all([userData, itemData]).then((values) => {
     const user = values[0];
     const item = values[1];
-    const preference = createPreference(user, item, message.postulationId);
+    const preference = mercadoPagoModule.createPreference(
+      user,
+      item,
+      message.postulationId,
+    );
     const responseFromMercadoPago = mercadoPagoModule.smartCheckoutGenerator(
       preference,
     );
